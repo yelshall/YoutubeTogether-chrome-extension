@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./css/watch.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="connected">
+        <p id="link-text">Send this link to your friends to start watching!</p>
+        <input id="share-url" type="text" readonly="true" autocomplete="off" autofocus />
+        <a href="#" id="copy-btn"><img id='copy-unclicked-img' src="../images/copy-button.png"></a>
+
+        <a href="./index.html"><button id="leave-session" type="button">Quit</button></a>
+
+        <div class="container">
+            <div class="chat-container" id="chat"></div>
+            <form class="send-message" autocomplete="off">
+                <input id="message-input" type="text" maxlength="100" placeholder="Type something...">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="./scripts/watch.js"></script>
+</body>
+
+</html>

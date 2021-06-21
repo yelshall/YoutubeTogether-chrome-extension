@@ -1,0 +1,111 @@
+body {
+    width: 325px;
+    height: 500px;
+    background-color: #5153c7;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+#link-text {
+    text-align: left;
+    margin-left: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    position: relative;
+    top: 5px;
+    font-family: 'Roboto';
+    font-size: 16px;
+    line-height: 13px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+#share-url {
+    position: absolute;
+    width: 157px;
+    height: 22px;
+    left: 20px;
+    top: 60px;
+    border: 2px solid #2a2b46;
+    border-color: #2a2b46;
+    border-radius: 6px;
+    outline: none;
+    background-color: #393a5e;
+    font-family: 'Roboto';
+    font-size: 11px;
+    color: #ffffff;
+}
+
+#copy-btn {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 193px;
+    top: 60px;
+    background-color: none;
+    cursor: pointer;
+}
+
+#copy-btn:active {
+    opacity: 0;
+}
+
+#leave-session {
+    position: absolute;
+    width: 80px;
+    height: 28px;
+    left: 230px;
+    top: 60px;
+    border: 2px solid;
+    border-color: #2a2b46;
+    border-radius: 6px;
+    outline: none;
+    background-color: #5153c7;
+    font-family: 'Roboto Mono';
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.container {
+    position: absolute;
+    top: 100px;
+    width: 305px;
+    left: 15px;
+    overflow: hidden;
+    font-family: 'Roboto';
+    font-size: 11.5px;
+}
+
+.chat-container {
+    height: 350px;
+    width: 300px;
+    overflow: auto;
+}
+
+.chat-container #message {
+    color: #ffffff;
+}
+
+.send-message input {
+    width: 80%;
+    border: solid 1px #C7C7C7;
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 7px;
+    outline: none;
+    font-family: 'Roboto';
+    background-color: #F9F9F9;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.send-message button {
+    display: none;
+}

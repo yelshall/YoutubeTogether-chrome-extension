@@ -1,0 +1,95 @@
+<html>
+
+<head>
+    <title>YouTube With Friends</title>
+    <script type="text/javascript" src="jquery-3.5.0.min.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="title">
+        <h2>
+            <img id="ywflogo" src="/images/ywflogo.svg"> YouTube With Friends
+        </h2>
+    </div>
+    <div class="no-error">
+        <div class="loading">
+            <div class="sk-fading-circle">
+                <div class="sk-circle1 sk-circle"></div>
+                <div class="sk-circle2 sk-circle"></div>
+                <div class="sk-circle3 sk-circle"></div>
+                <div class="sk-circle4 sk-circle"></div>
+                <div class="sk-circle5 sk-circle"></div>
+                <div class="sk-circle6 sk-circle"></div>
+                <div class="sk-circle7 sk-circle"></div>
+                <div class="sk-circle8 sk-circle"></div>
+                <div class="sk-circle9 sk-circle"></div>
+                <div class="sk-circle10 sk-circle"></div>
+                <div class="sk-circle11 sk-circle"></div>
+                <div class="sk-circle12 sk-circle"></div>
+            </div>
+        </div>
+        <div class="disconnected">
+            <p id="create-help">Click below to start watching videos together with your friends! Anyone can control the video unless you check the box below.</p>
+            <label id="control-checkbox"><input type="checkbox" id="control-lock"/> Only I have control of the video</label>
+            <button id="create-session" type="button">Start Watching</button>
+        </div>
+        <div class="connected">
+            <p id="link-help">Send the link below to friends. Make sure everyone joining clicks on the red YouTube With Friends logo after clicking on the link.</p>
+            <input id="share-url" type="text" readonly="true" autocomplete="off" autofocus />
+            <a id="copy-btn-clicked"><img id='copy-clicked-img' src="/images/CopyButton_Clicked.svg"></a>
+            <a href="#" id="copy-btn"><img id='copy-unclicked-img' src="/images/CopyButton_Unclicked.svg"></a>
+            <p>
+                <button id="leave-session" type="button">Quit</button>
+            </p>
+            <div class="log-console">
+                <img id="exit-settings-icon" src="/images/exit.svg">
+                <img id="settings-icon" src="/images/settings-icon.svg">
+                <div class="container">
+                    <div class="chat-container" id="chat"></div>
+                    <form class="send-message" autocomplete="off">
+                        <input id="message-input" type="text" maxlength="100" placeholder="Type something...">
+                        <button type="submit">Send</button>
+                    </form>
+                    <p id="see-party"><i><b>See who's in this party!</b></i></p>
+                </div>
+                <div class="settings">
+                    <div class="party-room">
+                        <div class="party-container">
+                            <div class="party-header">
+                                <b>Users in the party:</b>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="settings-head">Settings:</p>
+                    <div class="dark-mode">
+                        <input type="checkbox" id="dark-mode-toggle" class="checkbox" />
+                        <label for="dark-mode-toggle" class="switch"></label>
+                        <b>Dark Mode</b>
+                    </div>
+                    <p id="master-user">Master Control:</p>
+                    <p id="current-username"></p>
+                    <form class="change-username" autocomplete="off">
+                        <input id="change-username-input" type="text" maxlength="30" placeholder="Enter username">
+                        <button type="submit">Send</button>
+                    </form>
+                    <div class="support">
+                        <p id="support-head">Support:</p>
+                        <p id="need-help"><i>Need help? Drop us a message at ywf56123@gmail.com</i></p>
+                    </div>
+                    <p id="go-back-chat"><i><b>Let's get back to the party!</b></i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="error">
+        <p id="error-msg" class="error"></p>
+        <p><button id="close-error" type="button">Dismiss</button></p>
+    </div>
+</body>
+
+</html>

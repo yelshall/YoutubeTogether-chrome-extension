@@ -1,0 +1,44 @@
+body {
+    width: 325px;
+    height: 140px;
+    background-color: #5153c7;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+#disconnected {
+    text-align: center;
+}
+
+#start-watching-text {
+    font-family: 'Roboto';
+    font-size: 16px;
+    position: relative;
+    top: 10px;
+    color: #ffffff;
+    font-weight: 400;
+}
+
+#start-watching-button {
+    background-color: #4a339b;
+    border: none;
+    color: white;
+    padding: 14px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 2px;
+}
+
+#start-watching-button:hover {
+    transition-duration: 0.4s;
+    background-color: #393a5e;
+    color: white;
+    box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
