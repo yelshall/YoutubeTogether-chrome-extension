@@ -1,4 +1,6 @@
 const messages = [];
+const currentVideoState = "noVid";
+const connected = false;
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -17,11 +19,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "connect") {
         chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
         sendResponse({ messages: messages });
-        return true;
+        connected = true;
     } else if (request.type == "disconnect") {
         chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: request.id });
         messages.length = 0;
-        return true;
+        connected = false;
     } else if (request.type == "addMessage") {
         //Fix messages being shared by all
         messages.push({
@@ -29,9 +31,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             message: request.data.message,
             messageType: request.data.messageType
         });
-        return true;
+    } else if (request.type == "play") {
+        //Adding changing timestamp functionality
+        if (connected) {
+            currentVideoState = "play";
+        }
+    } else if (request.type == "pause") {
+        if (connected) {
+            currentVideoState = "pause";
+        }
+    } else if (request.type == "durationChange") {
+        if (connected) {
+            currentTimeStamp = request.data.timeStamp;
+        }
     }
     return true;
 });
 
-//const socket = io("http://localhost:3000");
+try {
+    const socket = io("http://localhost:3000");
+} catch (err) {
+    console.log("Failed to connect to server");
+}

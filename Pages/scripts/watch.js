@@ -77,9 +77,6 @@ changeLink("PlaceHolder URL");
 
 sendMessage("connect", {}, function(response) {
     for (let i = 0; i < response.messages.length; i++) {
-        if (response.messages[i].messageType == "Initial") {
-            break;
-        }
         addMessage(
             response.messages[i].name,
             response.messages[i].messageType,

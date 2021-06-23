@@ -18,5 +18,9 @@
     "permissions": [
         "tabs",
         "declarativeContent"
-    ]
+    ],
+    "content_scripts": [{
+        "matches": ["https://www.youtube.com/watch*"],
+        "js": ["contentScript.js"]
+    }]
 }
