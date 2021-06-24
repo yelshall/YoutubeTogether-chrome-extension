@@ -37,6 +37,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             message: request.data.message,
             messageType: request.data.messageType
         });
+        sendMessage(message);
     } else if (request.type == "play" && connected) {
         //Adding changing timestamp functionality
         currentVideoState = "play";
@@ -63,6 +64,7 @@ var connect = function() {
         });
 
         socket.on("message", (message) => {
+            console.log("yo");
             messages.push(message);
             chrome.runtime.sendMessage({ type: "message", data: message, id: -1 });
         });

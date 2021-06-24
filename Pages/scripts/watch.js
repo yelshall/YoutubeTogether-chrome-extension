@@ -89,7 +89,7 @@ sendMessage("connect", { url: url }, function(response) {
     }
 });
 
-chrome.runtime.onMessage(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "message") {
         message = request.data.message;
         addMessage(message.name, message.type, message.message);
