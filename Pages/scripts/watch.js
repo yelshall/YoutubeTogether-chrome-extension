@@ -4,11 +4,15 @@ const inputChat = document.getElementById('submit-button');
 const copyBtn = document.getElementById('copy-btn');
 const linkBox = document.getElementById('share-url');
 const quitBtn = document.getElementById('leave-session');
-var tabId = null;
 
-//Get tabId
+var tabId = null;
+var username = null;
+var url = null;
+
+//Get tabId, videoURL
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     tabId = tabs[0].id;
+    url = tabs[0].url;
 });
 
 //Connect to server
@@ -75,12 +79,19 @@ quitBtn.addEventListener('click', () => {
 //Placeholder code
 changeLink("PlaceHolder URL");
 
-sendMessage("connect", {}, function(response) {
+sendMessage("connect", { url: url }, function(response) {
     for (let i = 0; i < response.messages.length; i++) {
         addMessage(
             response.messages[i].name,
             response.messages[i].messageType,
             response.messages[i].message
         );
+    }
+});
+
+chrome.runtime.onMessage(function(request, sender, sendResponse) {
+    if (request.type == "message") {
+        message = request.data.message;
+        addMessage(message.name, message.type, message.message);
     }
 });

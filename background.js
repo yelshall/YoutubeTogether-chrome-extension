@@ -1,6 +1,9 @@
 const messages = [];
-const currentVideoState = "noVid";
-const connected = false;
+var currentVideoState = "noVid";
+var connected = false;
+var socket = null;
+var username = null;
+var url = null;
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -20,10 +23,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
         sendResponse({ messages: messages });
         connected = true;
+        url = "https://www.youtube.com/watch?v=usbJwJEr9cI";
+        connect();
     } else if (request.type == "disconnect") {
         chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: request.id });
         messages.length = 0;
         connected = false;
+        disconnect();
     } else if (request.type == "addMessage") {
         //Fix messages being shared by all
         messages.push({
@@ -31,25 +37,48 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             message: request.data.message,
             messageType: request.data.messageType
         });
-    } else if (request.type == "play") {
+    } else if (request.type == "play" && connected) {
         //Adding changing timestamp functionality
-        if (connected) {
-            currentVideoState = "play";
-        }
-    } else if (request.type == "pause") {
-        if (connected) {
-            currentVideoState = "pause";
-        }
-    } else if (request.type == "durationChange") {
-        if (connected) {
-            currentTimeStamp = request.data.timeStamp;
-        }
+        currentVideoState = "play";
+        console.log("Video Played");
+    } else if (request.type == "pause" && connected) {
+        currentVideoState = "pause";
+        console.log("Video Paused");
+    } else if (request.type == "durationChange" && connected) {
+        currentTimeStamp = request.data.timeStamp;
+        console.log(currentTimeStamp);
     }
     return true;
 });
 
-try {
-    const socket = io("http://localhost:3000");
-} catch (err) {
-    console.log("Failed to connect to server");
+var connect = function() {
+    try {
+        socket = io("http://192.168.0.182:3000");
+
+        socket.emit("connect", { url: url });
+
+        socket.on("initData", (initData) => {
+            username = initData.username;
+            url = initData.url;
+        });
+
+        socket.on("message", (message) => {
+            messages.push(message);
+            chrome.runtime.sendMessage({ type: "message", data: message, id: -1 });
+        });
+    } catch (err) {
+        console.log("Failed to connect to server");
+    }
+}
+
+var sendMessage = function(message) {
+    socket.emit("message", message);
+}
+
+var disconnect = function() {
+    try {
+        socket.disconnect();
+    } catch (err) {
+        console.log("Failed to disconnect to server");
+    }
 }
