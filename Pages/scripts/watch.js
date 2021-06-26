@@ -1,3 +1,5 @@
+'use strict';
+
 //Global Variables
 const chatcontainer = document.getElementById('chat');
 const inputChat = document.getElementById('submit-button');
@@ -5,27 +7,21 @@ const copyBtn = document.getElementById('copy-btn');
 const linkBox = document.getElementById('share-url');
 const quitBtn = document.getElementById('leave-session');
 
-var tabId = null;
 var username = null;
-var url = null;
-
-//Get tabId, videoURL
-chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    tabId = tabs[0].id;
-    url = tabs[0].url;
-});
-
-//Connect to server
 
 //Send message function to background script
 var sendMessage = function(type, data, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id }, function(response) {
-            if (callback) {
+    if (callback) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url }, function(response) {
                 callback(response);
-            }
+            });
         });
-    });
+    } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url });
+        });
+    }
 }
 
 //Append Message to chat container
@@ -33,6 +29,7 @@ var addMessage = function(name, type, message) {
     if (type == "createjoinleave") {
         let chatMessage = '<p id="message"><i><b>' + name + '<b> ' + message + '</i></p>';
         chatcontainer.innerHTML += chatMessage;
+        console.log("here");
     } else if (type == "message") {
         let chatMessage = '<p><b>' + name + '</b>: ' + message + '</p>';
         chatcontainer.innerHTML += chatMessage;
@@ -53,12 +50,12 @@ inputChat.addEventListener('click', (event) => {
     let message = document.getElementById('message-input');
 
     if (message.value != "") {
-        addMessage("placeHolderName", "message", message.value);
+        addMessage(username, "message", message.value);
 
         sendMessage("addMessage", {
-            name: "PlaceHolderName",
+            name: username,
             message: message.value,
-            messageType: "message"
+            type: "message"
         });
 
         message.value = ""
@@ -76,14 +73,15 @@ quitBtn.addEventListener('click', () => {
     sendMessage("disconnect", {});
 });
 
-//Placeholder code
-changeLink("PlaceHolder URL");
+sendMessage("connect", {});
 
-sendMessage("connect", { url: url }, function(response) {
+sendMessage("getData", {});
+
+sendMessage("getMessages", {}, function(response) {
     for (let i = 0; i < response.messages.length; i++) {
         addMessage(
             response.messages[i].name,
-            response.messages[i].messageType,
+            response.messages[i].type,
             response.messages[i].message
         );
     }
@@ -91,7 +89,14 @@ sendMessage("connect", { url: url }, function(response) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "message") {
-        message = request.data.message;
+        let message = request.data.message;
         addMessage(message.name, message.type, message.message);
+    } else if (request.type == "initData") {
+        username = request.data.username;
+        changeLink(request.data.url);
+    } else if (request.type == "data") {
+        username = request.data.username;
+        changeLink(request.data.url);
     }
+    return true;
 });

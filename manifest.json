@@ -20,7 +20,7 @@
         "declarativeContent"
     ],
     "content_scripts": [{
-        "matches": ["https://www.youtube.com/watch*"],
+        "matches": ["*://*.youtube.com/watch*"],
         "js": ["contentScript.js"]
     }]
 }
