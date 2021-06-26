@@ -1,10 +1,13 @@
 const messages = [];
+
 var currentVideoState = "noVid";
 var connected = false;
 var socket = null;
 var username = null;
-var url = null;
+var roomId = null;
+var vidURL = null;
 
+//Set when the extension is active
 chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
         chrome.declarativeContent.onPageChanged.addRules([{
@@ -18,69 +21,88 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
+//Listener from popup or content script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "connect") {
+    //Initial connection to server
+    if (request.type == "connect" && !connected) {
         chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
-        sendResponse({ messages: messages });
         connected = true;
-        url = "https://www.youtube.com/watch?v=usbJwJEr9cI";
-        connect();
+        serverConnect(request.url);
+    } else if (request.type == "getMessages") {
+        console.log("here", messages);
+        sendResponse({ messages: messages });
     } else if (request.type == "disconnect") {
         chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: request.id });
         messages.length = 0;
         connected = false;
-        disconnect();
+        serverDisconnect();
     } else if (request.type == "addMessage") {
         //Fix messages being shared by all
         messages.push({
             name: request.data.name,
             message: request.data.message,
-            messageType: request.data.messageType
+            type: request.data.type
         });
-        sendMessage(message);
+
+        sendMessageServer({
+            message: {
+                name: request.data.name,
+                message: request.data.message,
+                type: request.data.type
+            },
+            roomId: roomId
+        });
+    } else if (request.type == "getData") {
+        console.log("here", vidURL, username);
+        sendMessage("data", { url: vidURL, username: username });
     } else if (request.type == "play" && connected) {
         //Adding changing timestamp functionality
         currentVideoState = "play";
-        console.log("Video Played");
     } else if (request.type == "pause" && connected) {
         currentVideoState = "pause";
-        console.log("Video Paused");
     } else if (request.type == "durationChange" && connected) {
         currentTimeStamp = request.data.timeStamp;
-        console.log(currentTimeStamp);
     }
     return true;
 });
 
-var connect = function() {
-    try {
-        socket = io("http://192.168.0.182:3000");
+var serverConnect = function(url) {
+    socket = io("http://192.168.0.182:3000");
 
-        socket.emit("connect", { url: url });
+    socket.emit("serverConnect", { url: url });
 
-        socket.on("initData", (initData) => {
-            username = initData.username;
-            url = initData.url;
-        });
+    socket.on("initData", (initData) => {
+        username = initData.username;
+        vidURL = initData.url;
+        roomId = initData.roomId;
 
-        socket.on("message", (message) => {
-            console.log("yo");
-            messages.push(message);
-            chrome.runtime.sendMessage({ type: "message", data: message, id: -1 });
-        });
-    } catch (err) {
-        console.log("Failed to connect to server");
-    }
+        sendMessage("initData", { username: username, url: vidURL });
+    });
+
+    socket.on("message", (response) => {
+        messages.push(response.message);
+        sendMessage("message", { message: response.message });
+    });
 }
 
-var sendMessage = function(message) {
+var sendMessageServer = function(message) {
     socket.emit("message", message);
 }
 
-var disconnect = function() {
+var serverDisconnect = function() {
     try {
         socket.disconnect();
     } catch (err) {
         console.log("Failed to disconnect to server");
+    }
+}
+
+var sendMessage = function(type, data, callback) {
+    if (callback) {
+        chrome.runtime.sendMessage({ type: type, data: data }, function(response) {
+            callback(response);
+        });
+    } else {
+        chrome.runtime.sendMessage({ type: type, data: data });
     }
 }
