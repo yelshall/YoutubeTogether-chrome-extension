@@ -4,7 +4,6 @@ var currentVideoState = "noVid";
 var connected = false;
 var socket = null;
 var username = null;
-var roomId = null;
 var vidURL = null;
 var wtId = null;
 var videoId = null;
@@ -90,7 +89,6 @@ var serverConnect = function(videoId, wtId) {
     socket.on("initData", (initData) => {
         username = initData.username;
         vidURL = initData.url;
-        roomId = initData.roomId;
         wtId = initData.wtId;
 
         sendMessage("initData", { username: username, url: vidURL });
