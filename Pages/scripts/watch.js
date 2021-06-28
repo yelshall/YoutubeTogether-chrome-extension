@@ -13,13 +13,23 @@ var username = null;
 var sendMessage = function(type, data, callback) {
     if (callback) {
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url }, function(response) {
+            chrome.runtime.sendMessage({
+                type: type,
+                data: data,
+                id: tabs[0].id,
+                videoId: getVideoIdFromUrl(tabs[0].url)
+            }, function(response) {
                 callback(response);
             });
         });
     } else {
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url });
+            chrome.runtime.sendMessage({
+                type: type,
+                data: data,
+                id: tabs[0].id,
+                videoId: getVideoIdFromUrl(tabs[0].url)
+            });
         });
     }
 }
@@ -100,3 +110,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
     return true;
 });
+
+var getVideoIdFromUrl = function(url) {
+    let videoId = url.split('=')[1]
+    videoId = videoId.split('&')[0]
+    return videoId
+}
