@@ -6,7 +6,6 @@ var socket = null;
 var username = null;
 var vidURL = null;
 var wtId = null;
-var videoId = null;
 var currTabId = null;
 
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -44,7 +43,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "connect" && !connected) {
         chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
         connected = true;
-        serverConnect(request.videoId, wtId);
+        serverConnect(request.videoId, wtId, request.id);
     } else if (request.type == "getMessages") {
         sendResponse({ messages: messages });
     } else if (request.type == "disconnect") {
@@ -65,11 +64,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 name: request.data.name,
                 message: request.data.message,
                 type: request.data.type
+
             },
             wtId: wtId
         });
     } else if (request.type == "getData") {
-        sendMessage("data", { url: vidURL, username: username });
+        sendMessage("data", { url: vidURL, username: username, wtId: wtId });
     } else if (request.type == "play" && connected) {
         //Adding changing timestamp functionality
         currentVideoState = "play";
@@ -81,17 +81,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 });
 
-var serverConnect = function(videoId, wtId) {
+var serverConnect = function(videoId, weTubeId, tabId) {
     socket = io("http://192.168.1.210:3000");
-    console.log(videoId, wtId);
-    socket.emit("serverConnect", { videoId: videoId, wtId: wtId });
+    socket.emit("serverConnect", { videoId: videoId, wtId: weTubeId });
 
     socket.on("initData", (initData) => {
         username = initData.username;
         vidURL = initData.url;
         wtId = initData.wtId;
+        currTabId = tabId;
 
-        sendMessage("initData", { username: username, url: vidURL });
+        sendMessage("initData", { username: username, wtId: wtId, url: vidURL });
     });
 
     socket.on("message", (response) => {
