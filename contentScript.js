@@ -12,20 +12,14 @@ ytVideo.addEventListener('timeupdate', () => {
     chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
 });
 
-/*var sendMessage = function(type, data, callback) {
-    if (callback) {
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url }, function(response) {
-                callback(response);
-            });
-        });
-    } else {
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.runtime.sendMessage({ type: type, data: data, id: tabs[0].id, url: tabs[0].url });
-        });
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type == "changeVid") {
+        if (request.data.vidState == "pause") {
+            ytVideo.pause();
+            ytVideo.currentTime = request.data.timeStamp;
+        } else {
+            ytVideo.play();
+            ytVideo.currentTime = request.data.timeStamp;
+        }
     }
-}
-
-//sendMessage("connect", {});
-
-console.log("whyyyy");*/
+});

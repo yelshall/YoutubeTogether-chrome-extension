@@ -61,15 +61,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         connected = false;
         serverDisconnect();
     } else if (request.type == "addMessage") {
-        //Add messages
-        //Todo: Add the functionality of having multiple different storages for
-        //      different instances of the extension
-        /*messages.push({
-            name: request.data.name,
-            message: request.data.message,
-            type: request.data.type
-        });*/
-
         sendMessageServer({
             message: {
                 name: request.data.name,
@@ -85,10 +76,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (request.type == "play" && connected) {
         //Todo: Add controlling video functionality
         currentVideoState = "play";
+        sendVidData(currentTimeStamp, currentVideoState);
     } else if (request.type == "pause" && connected) {
         currentVideoState = "pause";
+        sendVidData(currentTimeStamp, currentVideoState);
     } else if (request.type == "durationChange" && connected) {
+        if (request.data.timeStamp < 0.1 && currentVideoState != "pause") {
+            currentVideoState = "play";
+        }
         currentTimeStamp = request.data.timeStamp;
+        sendVidData(currentTimeStamp, currentVideoState);
     }
     return true;
 });
@@ -122,11 +119,27 @@ var serverConnect = function(videoId, tabId) {
         console.log(response);
         sendMessage("messages", { messages: response.message });
     });
+
+    socket.on("vidData", (response) => {
+        if (response.vidState != currentVideoState) {
+            //send message to content script to pause/play vid
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState });
+        }
+
+        if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
+            //Send message to content script to change timestamp
+            sendMessage('changeVid', { timeStamp: response.timeStamp, currentVideoState: response.vidState });
+        }
+    });
 };
 
 //Send message to server
 var sendMessageServer = function(message) {
     socket.emit("message", message);
+};
+
+var sendVidData = function(timeStamp, vidState) {
+    socket.emit("vidData", { timeStamp: timeStamp, vidState: vidState, wtId: wtId, username: username });
 };
 
 var getMessagesServer = function() {
@@ -143,7 +156,7 @@ var serverDisconnect = function() {
     } catch (err) {
         console.log("Failed to disconnect to server");
     }
-}
+};
 
 //Send message function
 var sendMessage = function(type, data, callback) {
@@ -154,7 +167,7 @@ var sendMessage = function(type, data, callback) {
     } else {
         chrome.runtime.sendMessage({ type: type, data: data });
     }
-}
+};
 
 //Get wtId from URL
 function getWtIdFromUrl(url) {
