@@ -9,7 +9,7 @@ const quitBtn = document.getElementById('leave-session');
 
 var username = null;
 
-//Send message function to background script
+//Send message function
 var sendMessage = function(type, data, callback) {
     if (callback) {
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -81,36 +81,46 @@ copyBtn.addEventListener('click', () => {
 //Add button functionality for quitting to main page
 quitBtn.addEventListener('click', () => {
     sendMessage("disconnect", {});
+    username = null;
 });
 
+//Initial connection to the server
 sendMessage("connect", {});
 
-sendMessage("getData", {});
-
-sendMessage("getMessages", {}, function(response) {
+//Get messages from background script
+/*, function(response) {
     for (let i = 0; i < response.messages.length; i++) {
         addMessage(
             response.messages[i].name,
             response.messages[i].type,
             response.messages[i].message
         );
-    }
-});
+    }   
+});*/
 
+//Message listener
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "message") {
         let message = request.data.message;
         addMessage(message.name, message.type, message.message);
-    } else if (request.type == "initData") {
-        username = request.data.username;
-        changeLink(request.data.url);
+    } else if (request.type == "messages") {
+        console.log(request.data);
+        for (let i = 0; i < request.data.messages.length; i++) {
+            addMessage(
+                request.data.messages[i].name,
+                request.data.messages[i].type,
+                request.data.messages[i].message
+            );
+        }
     } else if (request.type == "data") {
         username = request.data.username;
         changeLink(request.data.url);
+        sendMessage("getMessages", {});
     }
     return true;
 });
 
+//Get video id from url
 var getVideoIdFromUrl = function(url) {
     let videoId = url.split('=')[1]
     videoId = videoId.split('&')[0]
