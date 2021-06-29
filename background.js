@@ -115,6 +115,7 @@ var serverConnect = function(videoId, tabId) {
     socket.on("message", (response) => {
         //messages.push(response.message);
         sendMessage("message", { message: response.message });
+        console.log(response);
     });
 
     socket.on("messages", (response) => {
@@ -135,6 +136,7 @@ var getMessagesServer = function() {
 //Disconnect from server
 var serverDisconnect = function() {
     try {
+        socket.emit("sendDisconnect", { wtId: wtId });
         socket.disconnect();
         wtId = null;
         username = null;
