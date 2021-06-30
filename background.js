@@ -93,7 +93,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Connect to server
 var serverConnect = function(videoId, tabId) {
-    socket = io("http://192.168.0.182:3000");
+    socket = io("https://desolate-caverns-55627.herokuapp.com/");
 
     //Send videoId and wtId to server
     socket.emit("serverConnect", { videoId: videoId, wtId: wtId });
@@ -121,18 +121,12 @@ var serverConnect = function(videoId, tabId) {
 
     socket.on("vidData", (response) => {
         if (response.type == "playPause") {
-            console.log(response.vidState, currentVideoState);
-            console.log(response.timeStamp, currentTimeStamp);
-            console.log("--------------------------------------------");
             //send message to content script to pause/play vid
             if (response.vidState != currentVideoState) {
                 sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
             }
         } else {
             if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
-                console.log(response.vidState, currentVideoState);
-                console.log(response.timeStamp, currentTimeStamp);
-                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 //Send message to content script to change timestamp
                 sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
             }
