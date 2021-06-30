@@ -1,4 +1,5 @@
 const ytVideo = document.querySelector("video");
+var pastTimeStamp = 0;
 
 ytVideo.addEventListener('play', () => {
     chrome.runtime.sendMessage({ type: "play", data: { timeStamp: ytVideo.currentTime }, id: -1 });
@@ -9,7 +10,14 @@ ytVideo.addEventListener('pause', () => {
 });
 
 ytVideo.addEventListener('timeupdate', () => {
-    chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    if (ytVideo.currentTime < 0.1) {
+        chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    }
+
+    if (abs(ytVideo.currentTime - pastTimeStamp) > 2) {
+        chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    }
+    pastTimeStamp = ytVideo.currentTime;
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
