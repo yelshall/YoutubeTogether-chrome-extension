@@ -75,13 +75,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         //Get data
         sendMessage("data", { url: vidURL, username: username, wtId: wtId });
     } else if (request.type == "play" && connected) {
+        console.log("play");
+
         //Todo: Add controlling video functionality
         currentVideoState = "play";
         sendVidData(currentTimeStamp, currentVideoState, "playPause");
     } else if (request.type == "pause" && connected) {
+        console.log("pause");
+
         currentVideoState = "pause";
         sendVidData(currentTimeStamp, currentVideoState, "playPause");
     } else if (request.type == "durationChange" && connected) {
+        console.log(currentTimeStamp);
         if (request.data.timeStamp < 0.1 && currentVideoState != "pause") {
             currentVideoState = "play";
         }
@@ -125,9 +130,9 @@ var serverConnect = function(videoId, tabId) {
             console.log(response.timeStamp, currentTimeStamp);
             console.log("----------------------------------------");
             //send message to content script to pause/play vid
-            if (response.vidState != currentVideoState) {
-                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            }
+            //if (response.vidState != currentVideoState) {
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
+            //}
         } else {
             if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
                 console.log(response.vidState, currentVideoState);
