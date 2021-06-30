@@ -77,16 +77,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (request.type == "play" && connected) {
         //Todo: Add controlling video functionality
         currentVideoState = "play";
-        sendVidData(currentTimeStamp, currentVideoState);
+        sendVidData(currentTimeStamp, currentVideoState, "playPause");
     } else if (request.type == "pause" && connected) {
         currentVideoState = "pause";
-        sendVidData(currentTimeStamp, currentVideoState);
+        sendVidData(currentTimeStamp, currentVideoState, "playPause");
     } else if (request.type == "durationChange" && connected) {
         if (request.data.timeStamp < 0.1 && currentVideoState != "pause") {
             currentVideoState = "play";
         }
         currentTimeStamp = request.data.timeStamp;
-        sendVidData(currentTimeStamp, currentVideoState);
+        sendVidData(currentTimeStamp, currentVideoState, "durationChange");
     }
     return true;
 });
@@ -120,14 +120,22 @@ var serverConnect = function(videoId, tabId) {
     });
 
     socket.on("vidData", (response) => {
-        if (response.vidState != currentVideoState) {
+        if (response.type == "playPause") {
+            console.log(response.vidState, currentVideoState);
+            console.log(response.timeStamp, currentTimeStamp);
+            console.log("--------------------------------------------");
             //send message to content script to pause/play vid
-            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
-        }
-
-        if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
-            //Send message to content script to change timestamp
-            sendMessage('changeVid', { timeStamp: response.timeStamp, currentVideoState: response.vidState }, null, true);
+            if (response.vidState != currentVideoState) {
+                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
+            }
+        } else {
+            if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
+                console.log(response.vidState, currentVideoState);
+                console.log(response.timeStamp, currentTimeStamp);
+                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                //Send message to content script to change timestamp
+                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
+            }
         }
     });
 };
@@ -137,8 +145,8 @@ var sendMessageServer = function(message) {
     socket.emit("message", message);
 };
 
-var sendVidData = function(timeStamp, vidState) {
-    socket.emit("vidData", { timeStamp: timeStamp, vidState: vidState, wtId: wtId, username: username });
+var sendVidData = function(timeStamp, vidState, type) {
+    socket.emit("vidData", { timeStamp: timeStamp, vidState: vidState, wtId: wtId, username: username, type: type });
 };
 
 var getMessagesServer = function() {
