@@ -17,7 +17,10 @@
     },
     "permissions": [
         "tabs",
-        "declarativeContent"
+        "declarativeContent",
+        "*://*.youtube.com/watch*",
+        "webNavigation"
+
     ],
     "content_scripts": [{
         "matches": ["*://*.youtube.com/watch*"],

@@ -26,6 +26,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     });
 });
 
+chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+    chrome.tabs.executeScript(null, { file: "contentScript.js" });
+});
+
 //Set when the extension is active
 chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -49,6 +53,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             connected = true;
             serverConnect(request.videoId, request.id);
         } else {
+            chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
+
             sendMessage("data", { username: username, wtId: wtId, url: vidURL });
         }
     } else if (request.type == "getMessages") {
@@ -74,24 +80,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (request.type == "getData") {
         //Get data
         sendMessage("data", { url: vidURL, username: username, wtId: wtId });
-    } else if (request.type == "play" && connected) {
-        console.log("play");
-
+    } else if (request.type == "play") {
         //Todo: Add controlling video functionality
         currentVideoState = "play";
-        sendVidData(currentTimeStamp, currentVideoState, "playPause");
-    } else if (request.type == "pause" && connected) {
-        console.log("pause");
-
+        if (connected) {
+            sendVidData(currentTimeStamp, currentVideoState, "playPause");
+        }
+    } else if (request.type == "pause") {
         currentVideoState = "pause";
-        sendVidData(currentTimeStamp, currentVideoState, "playPause");
-    } else if (request.type == "durationChange" && connected) {
-        console.log(currentTimeStamp);
+        if (connected) {
+            sendVidData(currentTimeStamp, currentVideoState, "playPause");
+        }
+    } else if (request.type == "durationChange") {
         if (request.data.timeStamp < 0.1 && currentVideoState != "pause") {
             currentVideoState = "play";
         }
         currentTimeStamp = request.data.timeStamp;
-        sendVidData(currentTimeStamp, currentVideoState, "durationChange");
+        if (connected) {
+            sendVidData(currentTimeStamp, currentVideoState, "durationChange");
+        }
     }
     return true;
 });
