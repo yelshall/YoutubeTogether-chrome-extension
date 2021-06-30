@@ -26,16 +26,24 @@ ytVideo.addEventListener('timeupdate', () => {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(request);
     if (request.type == "changeVid") {
         if (request.data.type == "playPause") {
             if (request.data.vidState == "play") {
+                console.log("Play");
                 changeVidState = false;
                 ytVideo.play();
                 changeVidState = true;
             } else {
+                console.log("Pause");
                 changeVidState = false;
                 ytVideo.pause();
                 changeVidState = true;
+            }
+
+            if (Math.abs(request.data.timeStamp - ytVideo.currentTime) > 2) {
+                pastTimeStamp = request.data.timeStamp;
+                ytVideo.currentTime = request.data.timeStamp;
             }
         } else {
             pastTimeStamp = request.data.timeStamp;
