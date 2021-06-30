@@ -27,7 +27,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-    chrome.tabs.executeScript(null, { file: "contentScript.js" });
+    if (details.tabId == currTabId) {
+        chrome.tabs.executeScript(null, { file: "contentScript.js" });
+    }
 });
 
 //Set when the extension is active
