@@ -1,7 +1,7 @@
 {
-    "name": "Getting started",
-    "description": "making an extension",
-    "version": "1.0",
+    "name": "Watch Youtube",
+    "description": "Watch YouTube with friends.",
+    "version": "0.1",
     "manifest_version": 2,
     "page_action": {
         "default_icon": {
