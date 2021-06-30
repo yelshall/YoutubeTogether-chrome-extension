@@ -14,16 +14,14 @@ ytVideo.addEventListener('timeupdate', () => {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "changeVid") {
-        if (request.data.vidState == "pause") {
-            ytVideo.pause();
-            if (abs(request.data.timeStamp - ytVideo.currentTime) > 2) {
-                ytVideo.currentTime = request.data.timeStamp;
+        if (request.data.type == "playPause") {
+            if (request.data.vidState == "play") {
+                ytVideo.play();
+            } else {
+                ytVideo.pause();
             }
         } else {
-            ytVideo.play();
-            if (abs(request.data.timeStamp - ytVideo.currentTime) > 2) {
-                ytVideo.currentTime = request.data.timeStamp;
-            }
+            ytVideo.currentTime = request.data.timeStamp;
         }
     }
 });
