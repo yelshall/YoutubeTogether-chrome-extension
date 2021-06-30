@@ -2,6 +2,7 @@
 const messages = [];
 
 var currentVideoState = "noVid";
+var currentTimeStamp = 0;
 var connected = false;
 var socket = null;
 var username = null;
@@ -112,23 +113,21 @@ var serverConnect = function(videoId, tabId) {
     socket.on("message", (response) => {
         //messages.push(response.message);
         sendMessage("message", { message: response.message });
-        console.log(response);
     });
 
     socket.on("messages", (response) => {
-        console.log(response);
         sendMessage("messages", { messages: response.message });
     });
 
     socket.on("vidData", (response) => {
         if (response.vidState != currentVideoState) {
             //send message to content script to pause/play vid
-            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState });
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState }, null, true);
         }
 
         if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
             //Send message to content script to change timestamp
-            sendMessage('changeVid', { timeStamp: response.timeStamp, currentVideoState: response.vidState });
+            sendMessage('changeVid', { timeStamp: response.timeStamp, currentVideoState: response.vidState }, null, true);
         }
     });
 };
@@ -159,13 +158,23 @@ var serverDisconnect = function() {
 };
 
 //Send message function
-var sendMessage = function(type, data, callback) {
+var sendMessage = function(type, data, callback, toCS = false) {
     if (callback) {
-        chrome.runtime.sendMessage({ type: type, data: data }, function(response) {
-            callback(response);
-        });
+        if (toCS) {
+            chrome.tabs.sendMessage(currTabId, { type: type, data: data }, function(response) {
+                callback(response);
+            });
+        } else {
+            chrome.runtime.sendMessage({ type: type, data: data }, function(response) {
+                callback(response);
+            });
+        }
     } else {
-        chrome.runtime.sendMessage({ type: type, data: data });
+        if (toCS) {
+            chrome.tabs.sendMessage(currTabId, { type: type, data: data });
+        } else {
+            chrome.runtime.sendMessage({ type: type, data: data });
+        }
     }
 };
 
