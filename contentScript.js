@@ -13,6 +13,7 @@ ytVideo.addEventListener('timeupdate', () => {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log("in content script listener");
     if (request.type == "changeVid") {
         if (request.data.vidState == "pause") {
             ytVideo.pause();
@@ -23,3 +24,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
     }
 });
+
+var sendMessage = function(type, data, callback) {
+    if (callback) {
+        chrome.runtime.sendMessage({ type: type, data: data }, function(response) {
+            callback(response);
+        });
+    } else {
+        chrome.runtime.sendMessage({ type: type, data: data });
+    }
+};
+
+console.log("in content script");

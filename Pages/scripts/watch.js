@@ -39,7 +39,6 @@ var addMessage = function(name, type, message) {
     if (type == "createjoinleave") {
         let chatMessage = '<p id="message"><i><b>' + name + '<b> ' + message + '</i></p>';
         chatcontainer.innerHTML += chatMessage;
-        console.log("here");
     } else if (type == "message") {
         let chatMessage = '<p><b>' + name + '</b>: ' + message + '</p>';
         chatcontainer.innerHTML += chatMessage;
@@ -104,7 +103,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         let message = request.data.message;
         addMessage(message.name, message.type, message.message);
     } else if (request.type == "messages") {
-        console.log(request.data);
         for (let i = 0; i < request.data.messages.length; i++) {
             addMessage(
                 request.data.messages[i].name,
@@ -116,6 +114,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         username = request.data.username;
         changeLink(request.data.url);
         sendMessage("getMessages", {});
+    } else if (request.type == "changeVid") {
+        console.log("it's working here wtf");
     }
     return true;
 });
