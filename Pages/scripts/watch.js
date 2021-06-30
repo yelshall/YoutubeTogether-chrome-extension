@@ -114,8 +114,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         username = request.data.username;
         changeLink(request.data.url);
         sendMessage("getMessages", {});
-    } else if (request.type == "changeVid") {
-        console.log("it's working here wtf");
     }
     return true;
 });
