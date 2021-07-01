@@ -82,24 +82,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (request.type == "getData") {
         //Get data
         sendMessage("data", { url: vidURL, username: username, wtId: wtId });
-    } else if (request.type == "play") {
-        //Todo: Add controlling video functionality
-        currentVideoState = "play";
+    } else if (request.type == "play" || request.type == "pause") {
         if (connected) {
-            sendVidData(currentTimeStamp, currentVideoState, "playPause");
-        }
-    } else if (request.type == "pause") {
-        currentVideoState = "pause";
-        if (connected) {
-            sendVidData(currentTimeStamp, currentVideoState, "playPause");
+            sendVidData(request.data.timeStamp, request.data.vidState, "playPause");
         }
     } else if (request.type == "durationChange") {
-        if (request.data.timeStamp < 0.1 && currentVideoState != "pause") {
-            currentVideoState = "play";
-        }
-        currentTimeStamp = request.data.timeStamp;
         if (connected) {
-            sendVidData(currentTimeStamp, currentVideoState, "durationChange");
+            sendVidData(request.data.timeStamp, request.data.vidState, "currentTime");
+            sendVidData(request.data.timeStamp, request.data.vidState, "durationChange");
         }
     }
     return true;
@@ -139,17 +129,13 @@ var serverConnect = function(videoId, tabId) {
             console.log(response.timeStamp, currentTimeStamp);
             console.log("----------------------------------------");
             //send message to content script to pause/play vid
-            if (response.vidState != currentVideoState) {
-                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            }
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
         } else {
-            if (Math.abs(response.timeStamp - currentTimeStamp) > 3.0) {
-                console.log(response.vidState, currentVideoState);
-                console.log(response.timeStamp, currentTimeStamp);
-                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-                //Send message to content script to change timestamp
-                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            }
+            console.log(response.vidState, currentVideoState);
+            console.log(response.timeStamp, currentTimeStamp);
+            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+            //Send message to content script to change timestamp
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
         }
     });
 };
