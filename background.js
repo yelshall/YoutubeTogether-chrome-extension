@@ -139,11 +139,11 @@ var serverConnect = function(videoId, tabId) {
             console.log(response.timeStamp, currentTimeStamp);
             console.log("----------------------------------------");
             //send message to content script to pause/play vid
-            //if (response.vidState != currentVideoState) {
-            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            //}
+            if (response.vidState != currentVideoState) {
+                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
+            }
         } else {
-            if (Math.abs(response.timeStamp - currentTimeStamp) > 2.0) {
+            if (Math.abs(response.timeStamp - currentTimeStamp) > 3.0) {
                 console.log(response.vidState, currentVideoState);
                 console.log(response.timeStamp, currentTimeStamp);
                 console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
