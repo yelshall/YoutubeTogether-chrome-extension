@@ -1,28 +1,28 @@
 const ytVideo = document.querySelector("video");
-var pastTimeStamp = 0;
-var changeVidState = true;;
+//var pastTimeStamp = 0;
+//var changeVidState = true;
 
 ytVideo.addEventListener('play', () => {
-    if (changeVidState) {
-        chrome.runtime.sendMessage({ type: "play", data: { timeStamp: ytVideo.currentTime }, id: -1 });
-    }
+    //if (changeVidState) {
+    chrome.runtime.sendMessage({ type: "play", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    //}
 });
 
 ytVideo.addEventListener('pause', () => {
-    if (changeVidState) {
-        chrome.runtime.sendMessage({ type: "pause", data: { timeStamp: ytVideo.currentTime }, id: -1 });
-    }
+    //if (changeVidState) {
+    chrome.runtime.sendMessage({ type: "pause", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    //}
 });
 
 ytVideo.addEventListener('timeupdate', () => {
-    if (ytVideo.currentTime < 0.1) {
-        chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
-    }
+    //if (ytVideo.currentTime < 0.1) {
+    chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
+    //}
 
-    if (Math.abs(ytVideo.currentTime - pastTimeStamp) > 2) {
+    /*if (Math.abs(ytVideo.currentTime - pastTimeStamp) > 2) {
         chrome.runtime.sendMessage({ type: "durationChange", data: { timeStamp: ytVideo.currentTime }, id: -1 });
     }
-    pastTimeStamp = ytVideo.currentTime;
+    pastTimeStamp = ytVideo.currentTime;*/
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -31,22 +31,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (request.data.type == "playPause") {
             if (request.data.vidState == "play") {
                 console.log("Play");
-                changeVidState = false;
+                //changeVidState = false;
                 ytVideo.play();
-                changeVidState = true;
+                //changeVidState = true;
             } else {
                 console.log("Pause");
-                changeVidState = false;
+                //changeVidState = false;
                 ytVideo.pause();
-                changeVidState = true;
+                //changeVidState = true;
             }
 
-            if (Math.abs(request.data.timeStamp - ytVideo.currentTime) > 2) {
-                pastTimeStamp = request.data.timeStamp;
+            if (Math.abs(request.data.timeStamp - ytVideo.currentTime) > 3.0) {
+                //pastTimeStamp = request.data.timeStamp;
                 ytVideo.currentTime = request.data.timeStamp;
             }
         } else {
-            pastTimeStamp = request.data.timeStamp;
+            //pastTimeStamp = request.data.timeStamp;
             ytVideo.currentTime = request.data.timeStamp;
         }
     }
