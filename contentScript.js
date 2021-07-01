@@ -5,13 +5,19 @@ var changeVidState = true;
 
 ytVideo.addEventListener('play', () => {
     currentVidState = "play";
-    chrome.runtime.sendMessage({ type: "play", data: { timeStamp: ytVideo.currentTime, vidState: currentVidState }, id: -1 });
+    if (changeVidState) {
+        chrome.runtime.sendMessage({ type: "play", data: { timeStamp: ytVideo.currentTime, vidState: currentVidState }, id: -1 });
+    }
+
+    changeVidState = true;
 });
 
 ytVideo.addEventListener('pause', () => {
     currentVidState = "pause";
-    chrome.runtime.sendMessage({ type: "pause", data: { timeStamp: ytVideo.currentTime, vidState: currentVidState }, id: -1 });
-
+    if (changeVidState) {
+        chrome.runtime.sendMessage({ type: "pause", data: { timeStamp: ytVideo.currentTime, vidState: currentVidState }, id: -1 });
+    }
+    changeVidState = true;
 });
 
 ytVideo.addEventListener('timeupdate', () => {
@@ -29,8 +35,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "changeVid") {
         if (request.data.type == "playPause" && request.data.vidState != currentVidState) {
             if (request.data.vidState == "play") {
+                changeVidState = false;
                 ytVideo.play();
             } else {
+                changeVidState = false;
                 ytVideo.pause();
             }
         } else {
