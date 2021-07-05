@@ -76,6 +76,12 @@ var appendUsers = function(userList) {
     }
 };
 
+var appendUser = function(user) {
+    let username = '<p id="userSettings"><i><b>' + user.username + '<b></i></p>';
+
+    settingsList.innerHTML += username;
+};
+
 //Add button functionality for messaging
 //Todo: Implement all types after doing all the server stuff
 inputChat.addEventListener('click', (event) => {
@@ -164,6 +170,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendMessage("getMessages", {});
     } else if (request.type == "userList") {
         appendUsers(request.data.users);
+    } else if (request.type == "newUser") {
+        appendUser(request.data.user);
     }
     return true;
 });
