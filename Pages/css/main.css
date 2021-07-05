@@ -42,3 +42,33 @@ html {
     color: white;
     box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
+
+#username {
+    text-align: center;
+}
+
+#enter-username-text {
+    font-family: 'Roboto';
+    font-size: 16px;
+    position: relative;
+    top: 10px;
+    color: #ffffff;
+    font-weight: 400;
+}
+
+.enter-username input {
+    width: 60%;
+    border: solid 1px #C7C7C7;
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 7px;
+    outline: none;
+    font-family: 'Roboto';
+    background-color: #F9F9F9;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.enter-username button {
+    display: none;
+}

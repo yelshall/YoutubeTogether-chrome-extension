@@ -11,10 +11,16 @@
 <body>
     <div id="disconnected">
         <p id="start-watching-text">Click to start watching videos with friends!</p>
-        <a href="./watch.html">
-            <button id="start-watching-button" type="button">Start Watching</button>
-        </a>
+        <button id="start-watching-button" type="button">Start Watching</button>
     </div>
+    <div id="username">
+        <p id="enter-username-text">Choose your username!</p>
+        <form class="enter-username" autocomplete="off">
+            <input id="username-input" type="text" maxlength="20" placeholder="...">
+            <button id="username-button" type="submit">Send</button>
+        </form>
+    </div>
+    <script type="text/javascript" src="./scripts/index.js"></script>
 </body>
 
 </html>
