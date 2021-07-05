@@ -93,10 +93,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendMessage("data", { url: vidURL, username: username, wtId: wtId, settings: settings });
     } else if (request.type == "play" || request.type == "pause") {
         if (connected && master) {
+            console.log("here2");
             sendVidData(request.data.timeStamp, request.data.vidState, "playPause");
         }
     } else if (request.type == "durationChange") {
+        console.log(master, connected);
         if (connected && master) {
+            console.log("here2");
             sendVidData(request.data.timeStamp, request.data.vidState, "durationChange");
         }
     } else if (request.type == "userList") {
@@ -111,7 +114,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 var serverConnect = function(videoId, tabId, username) {
     //socket = io("https://desolate-caverns-55627.herokuapp.com/");
 
-    socket = io("http://localhost:3000");
+    socket = io("http://192.168.0.182:3000");
     //Send videoId and wtId to server
     socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username });
 
@@ -158,7 +161,6 @@ var serverConnect = function(videoId, tabId, username) {
 
 //Send message to server
 var sendMessageServer = function(message) {
-    console.log(message);
     socket.emit("message", message);
 };
 
