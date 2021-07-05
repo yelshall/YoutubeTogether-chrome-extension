@@ -93,13 +93,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendMessage("data", { url: vidURL, username: username, wtId: wtId, settings: settings });
     } else if (request.type == "play" || request.type == "pause") {
         if (connected && master) {
-            console.log("here2");
             sendVidData(request.data.timeStamp, request.data.vidState, "playPause");
         }
     } else if (request.type == "durationChange") {
-        console.log(master, connected);
         if (connected && master) {
-            console.log("here2");
             sendVidData(request.data.timeStamp, request.data.vidState, "durationChange");
         }
     } else if (request.type == "userList") {
@@ -120,11 +117,14 @@ var serverConnect = function(videoId, tabId, username) {
 
     //Receive inital data
     socket.on("data", (initData) => {
+        console.log(initData);
         username = initData.username;
         vidURL = initData.url;
         wtId = initData.wtId;
         currTabId = tabId;
         userId = initData.userId;
+        master = initData.master;
+
 
         //Send Initial data to popup script
         sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings });
@@ -142,11 +142,7 @@ var serverConnect = function(videoId, tabId, username) {
 
     if (!master) {
         socket.on("vidData", (response) => {
-            if (response.type == "playPause") {
-                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            } else {
-                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-            }
+            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
         });
     }
 
