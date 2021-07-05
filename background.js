@@ -150,6 +150,10 @@ var serverConnect = function(videoId, tabId, username) {
     socket.on("userList", (response) => {
         sendMessage("userList", { users: response.userList });
     });
+
+    socket.on("newUser", (response) => {
+        sendMessage("newUser", { user: response.user });
+    });
 };
 
 //Send message to server
