@@ -93,7 +93,7 @@ html {
     color: #ffffff;
 }
 
-.send-message input {
+.send-message #message-input {
     width: 80%;
     border: solid 1px #C7C7C7;
     border-radius: 6px;
@@ -108,4 +108,19 @@ html {
 
 .send-message button {
     display: none;
+}
+
+.settings {
+    position: absolute;
+    top: 100px;
+    width: 305px;
+    left: 15px;
+    overflow: hidden;
+    font-family: 'Roboto';
+    font-size: 11.5px;
+}
+
+#settings-list-text {
+    color: white;
+    font-weight: bold;
 }

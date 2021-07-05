@@ -4,10 +4,14 @@ const messages = [];
 var currentVideoState = "noVid";
 var currentTimeStamp = 0;
 var connected = false;
+var settings = false;
+var master = false;
+var inUse = false;
 var socket = null;
 var username = null;
 var vidURL = null;
 var wtId = null;
+var userId = null;
 var currTabId = null;
 
 //Get wtId from url
@@ -48,26 +52,30 @@ chrome.runtime.onInstalled.addListener(function() {
 
 //Listener from popup or content script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "connect") {
+    if (request.type == "usernameInput") {
+        username = request.data.username;
+    } else if (request.type == "connect") {
         //Initial connection to server
+        inUse = true;
         if (!connected) {
             chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
             connected = true;
-            serverConnect(request.videoId, request.id);
+            serverConnect(request.videoId, request.id, username);
         } else {
             chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
 
-            sendMessage("data", { username: username, wtId: wtId, url: vidURL });
+            sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings });
         }
     } else if (request.type == "getMessages") {
         //Get messages
-        //sendResponse({ messages: messages });
         getMessagesServer();
     } else if (request.type == "disconnect") {
         //Disconnect from server
         chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: request.id });
         messages.length = 0;
         connected = false;
+        settings = false;
+        inUse = false;
         serverDisconnect();
     } else if (request.type == "addMessage") {
         sendMessageServer({
@@ -77,30 +85,35 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 type: request.data.type
 
             },
-            wtId: wtId
+            wtId: wtId,
+            userId: userId
         });
     } else if (request.type == "getData") {
         //Get data
-        sendMessage("data", { url: vidURL, username: username, wtId: wtId });
+        sendMessage("data", { url: vidURL, username: username, wtId: wtId, settings: settings });
     } else if (request.type == "play" || request.type == "pause") {
-        if (connected) {
+        if (connected && master) {
             sendVidData(request.data.timeStamp, request.data.vidState, "playPause");
         }
     } else if (request.type == "durationChange") {
-        if (connected) {
-            sendVidData(request.data.timeStamp, request.data.vidState, "currentTime");
+        if (connected && master) {
             sendVidData(request.data.timeStamp, request.data.vidState, "durationChange");
         }
+    } else if (request.type == "userList") {
+        getUserList();
+    } else if (request.type == "settings") {
+        settings = request.data.settings;
     }
     return true;
 });
 
 //Connect to server
-var serverConnect = function(videoId, tabId) {
-    socket = io("https://desolate-caverns-55627.herokuapp.com/");
+var serverConnect = function(videoId, tabId, username) {
+    //socket = io("https://desolate-caverns-55627.herokuapp.com/");
 
+    socket = io("http://localhost:3000");
     //Send videoId and wtId to server
-    socket.emit("serverConnect", { videoId: videoId, wtId: wtId });
+    socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username });
 
     //Receive inital data
     socket.on("data", (initData) => {
@@ -108,9 +121,10 @@ var serverConnect = function(videoId, tabId) {
         vidURL = initData.url;
         wtId = initData.wtId;
         currTabId = tabId;
+        userId = initData.userId;
 
         //Send Initial data to popup script
-        sendMessage("data", { username: username, wtId: wtId, url: vidURL });
+        sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings });
     });
 
     //Receive messages from other clients
@@ -123,40 +137,43 @@ var serverConnect = function(videoId, tabId) {
         sendMessage("messages", { messages: response.message });
     });
 
-    socket.on("vidData", (response) => {
-        if (response.type == "playPause") {
-            console.log(response.vidState, currentVideoState);
-            console.log(response.timeStamp, currentTimeStamp);
-            console.log("----------------------------------------");
-            //send message to content script to pause/play vid
-            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-        } else {
-            console.log(response.vidState, currentVideoState);
-            console.log(response.timeStamp, currentTimeStamp);
-            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            //Send message to content script to change timestamp
-            sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
-        }
+    if (!master) {
+        socket.on("vidData", (response) => {
+            if (response.type == "playPause") {
+                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
+            } else {
+                sendMessage('changeVid', { timeStamp: response.timeStamp, vidState: response.vidState, type: response.type }, null, true);
+            }
+        });
+    }
+
+    socket.on("userList", (response) => {
+        sendMessage("userList", { users: response.userList });
     });
 };
 
 //Send message to server
 var sendMessageServer = function(message) {
+    console.log(message);
     socket.emit("message", message);
 };
 
 var sendVidData = function(timeStamp, vidState, type) {
-    socket.emit("vidData", { timeStamp: timeStamp, vidState: vidState, wtId: wtId, username: username, type: type });
+    socket.emit("vidData", { timeStamp: timeStamp, vidState: vidState, wtId: wtId, userId: userId, username: username, type: type });
 };
 
 var getMessagesServer = function() {
-    socket.emit("getMessages", { wtId: wtId });
+    socket.emit("getMessages", { wtId: wtId, userId: userId });
+};
+
+var getUserList = function() {
+    socket.emit("userList", { wtId: wtId, userId: userId });
 };
 
 //Disconnect from server
 var serverDisconnect = function() {
     try {
-        socket.emit("sendDisconnect", { wtId: wtId });
+        socket.emit("sendDisconnect", { wtId: wtId, userId: userId });
         socket.disconnect();
         wtId = null;
         username = null;
