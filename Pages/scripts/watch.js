@@ -6,20 +6,22 @@ const inputChat = document.getElementById('submit-button');
 const copyBtn = document.getElementById('copy-btn');
 const linkBox = document.getElementById('share-url');
 const quitBtn = document.getElementById('leave-session');
-const settingsBtn1 = document.getElementById('settings-button-1');
-const settingsBtn2 = document.getElementById('settings-button-2')
+const settingsBtn = document.getElementById('settings-button');
 const settingsList = document.getElementById('settings-list');
+const supportTxt = document.getElementById('support-text');
+const changeUsername = document.getElementById('change-button')
 
-const chatContainer = document.getElementsByClassName("container")[0];
+const bodyContainer = document.getElementsByClassName('body')[0];
 const form = document.getElementsByClassName('send-message')[0];
 const settingsContainer = document.getElementsByClassName("settings")[0];
 
 var username = null;
 var settings = false;
 
-chatcontainer.style.display = "none";
+bodyContainer.style.display = "none";
 form.style.display = "none";
 settingsContainer.style.display = "none";
+supportTxt.style.display = "none";
 
 //Send message function
 var sendMessage = function(type, data, callback) {
@@ -54,6 +56,9 @@ var addMessage = function(name, type, message) {
     } else if (type == "message") {
         let chatMessage = '<p><b>' + name + '</b>: ' + message + '</p>';
         chatcontainer.innerHTML += chatMessage;
+    } else if (type == "changeUsername") {
+        let chatMessage = '<p id="message"><b><i>' + message + '</i></b></p>';
+        chatcontainer.innerHTML += chatMessage;
     }
 
     chatcontainer.scrollTop = chatcontainer.scrollHeight;
@@ -65,6 +70,7 @@ var changeLink = function(urlLink) {
 };
 
 var appendUsers = function(userList) {
+    console.log(userList);
     for (let i = 0; i < userList.length; i++) {
         if (userList[i].master) {
             let user = '<p id="userSettings"><i><b>' + userList[i].username + '<b> (Master)</i></p>';
@@ -97,7 +103,18 @@ inputChat.addEventListener('click', (event) => {
             type: "message"
         });
 
-        message.value = ""
+        message.value = "";
+    }
+});
+
+changeUsername.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    let name = document.getElementById('change-username');
+
+    if (name.value != "") {
+        sendMessage("changeUsername", { name: name.value });
+        name.value = "";
     }
 });
 
@@ -113,24 +130,26 @@ quitBtn.addEventListener('click', () => {
     username = null;
 });
 
-settingsBtn1.addEventListener('click', (event) => {
+settingsBtn.addEventListener('click', (event) => {
     event.preventDefault();
 
-    chatcontainer.style.display = "none";
-    form.style.display = "none";
-    settingsContainer.style.display = "block";
-    settings = true;
-    sendMessage("settings", { settings: settings });
-});
+    if (!settings) {
+        bodyContainer.style.display = "none";
+        form.style.display = "none";
+        settingsContainer.style.display = "block";
+        supportTxt.style.display = "block";
 
-settingsBtn2.addEventListener('click', (event) => {
-    event.preventDefault();
+        settings = true;
+        sendMessage("settings", { settings: settings });
+    } else {
+        bodyContainer.style.display = "block";
+        form.style.display = "block";
+        settingsContainer.style.display = "none";
+        supportTxt.style.display = "none";
 
-    chatcontainer.style.display = "block";
-    form.style.display = "block";
-    settingsContainer.style.display = "none";
-    settings = false;
-    sendMessage("settings", { settings: settings });
+        settings = false;
+        sendMessage("settings", { settings: settings });
+    }
 });
 
 //Initial connection to the server
@@ -154,15 +173,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         changeLink(request.data.url);
 
         if (!request.data.settings) {
-            chatcontainer.style.display = "block";
+            bodyContainer.style.display = "block";
             form.style.display = "block";
             settingsContainer.style.display = "none";
+            supportTxt.style.display = "none";
 
             settings = false;
         } else {
-            chatcontainer.style.display = "none";
+            bodyContainer.style.display = "none";
             form.style.display = "none";
             settingsContainer.style.display = "block";
+            supportTxt.style.display = "block";
+
             settings = true;
         }
 
@@ -172,6 +194,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         appendUsers(request.data.users);
     } else if (request.type == "newUser") {
         appendUser(request.data.user);
+    } else if (request.type == "newName") {
+        console.log
+        username = request.data.name;
+    } else if (request.type == "newUserList") {
+        settingsList.innerHTML = "";
+
+        appendUsers(request.data.users);
     }
     return true;
 });

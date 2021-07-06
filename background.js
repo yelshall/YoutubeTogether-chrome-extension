@@ -103,6 +103,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         getUserList();
     } else if (request.type == "settings") {
         settings = request.data.settings;
+    } else if (request.type == "changeUsername") {
+        changeUsernameServer(request.data.name);
     }
     return true;
 });
@@ -132,6 +134,7 @@ var serverConnect = function(videoId, tabId, username) {
 
     //Receive messages from other clients
     socket.on("message", (response) => {
+        console.log(response);
         //messages.push(response.message);
         sendMessage("message", { message: response.message });
     });
@@ -150,8 +153,22 @@ var serverConnect = function(videoId, tabId, username) {
         sendMessage("userList", { users: response.userList });
     });
 
+    socket.on("newUserList", (response) => {
+        sendMessage("newUserList", { users: response.userList });
+    });
+
     socket.on("newUser", (response) => {
         sendMessage("newUser", { user: response.user });
+    });
+
+    socket.on("newName", (response) => {
+        username = response.name;
+        sendMessage("newName", { name: response.name });
+    });
+
+    socket.on("setMaster", (response) => {
+        master = true;
+        sendMessage("setMaster", {});
     });
 };
 
@@ -171,6 +188,10 @@ var getMessagesServer = function() {
 var getUserList = function() {
     socket.emit("userList", { wtId: wtId, userId: userId });
 };
+
+var changeUsernameServer = function(name) {
+    socket.emit("changeUsername", { name: name, userId: userId, wtId: wtId });
+}
 
 //Disconnect from server
 var serverDisconnect = function() {

@@ -15,20 +15,31 @@
         <a href="#" id="copy-btn"><img id='copy-unclicked-img' src="../images/copy-button.png"></a>
 
         <a href="./index.html"><button id="leave-session" type="button">Quit</button></a>
+        <input id="settings-button" type="image" src="../images/settings-icon.svg">
 
-        <div class="container">
+        <div class="body">
             <div class="chat-container" id="chat"></div>
-            <form class="send-message" autocomplete="off">
-                <input id="message-input" type="text" maxlength="100" placeholder="Type something...">
-                <button id="submit-button" type="submit">Send</button>
-                <input id="settings-button-1" type="image" src="../images/settings-icon.svg">
-            </form>
         </div>
 
         <div class="settings">
             <p id="settings-list-text">People in this room:</p>
             <div id="settings-list"></div>
-            <input id="settings-button-2" type="image" src="../images/settings-icon.svg">
+            <div class="settings-options">
+                <form class="change" autocomplete="off">
+                    <input id="change-username" type="text" autocomplete="off" maxlength="20" placeholder="Change username...">
+                    <button id="change-button" type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p id="username"></p>
+            <form class="send-message" autocomplete="off">
+                <input id="message-input" type="text" maxlength="100" placeholder="Type something...">
+                <button id="submit-button" type="submit">Send</button>
+            </form>
+
+            <p id="support-text">Support: Send a message to <i>placeholderemail@gmail.com</i></p>
         </div>
     </div>
     <script type="text/javascript" src="./scripts/watch.js"></script>
