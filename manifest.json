@@ -3,6 +3,12 @@
     "description": "Watch YouTube with friends.",
     "version": "0.1",
     "manifest_version": 2,
+    "icons": {
+        "16": "/images/16logo.png",
+        "32": "/images/32logo.png",
+        "48": "/images/48logo.png",
+        "128": "/images/128logo.png"
+    },
     "page_action": {
         "default_icon": {
             "16": "/images/16logo.png",
