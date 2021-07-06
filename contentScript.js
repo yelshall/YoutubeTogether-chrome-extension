@@ -48,3 +48,5 @@ var sendMessage = function(type, data, callback) {
         chrome.runtime.sendMessage({ type: type, data: data });
     }
 };
+
+console.log("");

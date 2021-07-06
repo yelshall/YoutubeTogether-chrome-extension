@@ -51,13 +51,13 @@ var sendMessage = function(type, data, callback) {
 //Append Message to chat container
 var addMessage = function(name, type, message) {
     if (type == "createjoinleave") {
-        let chatMessage = '<p id="message"><i><b>' + name + '<b> ' + message + '</i></p>';
+        let chatMessage = '<p id="message"><i>' + name + ' ' + message + '</i></p>';
         chatcontainer.innerHTML += chatMessage;
     } else if (type == "message") {
-        let chatMessage = '<p><b>' + name + '</b>: ' + message + '</p>';
+        let chatMessage = '<p>' + name + ': ' + message + '</p>';
         chatcontainer.innerHTML += chatMessage;
     } else if (type == "changeUsername") {
-        let chatMessage = '<p id="message"><b><i>' + message + '</i></b></p>';
+        let chatMessage = '<p id="message"><i>' + message + '</i></p>';
         chatcontainer.innerHTML += chatMessage;
     }
 
@@ -73,17 +73,17 @@ var appendUsers = function(userList) {
     console.log(userList);
     for (let i = 0; i < userList.length; i++) {
         if (userList[i].master) {
-            let user = '<p id="userSettings"><i><b>' + userList[i].username + '<b> (Master)</i></p>';
+            let user = '<p id="userSettings"><i>' + userList[i].username + ' (Master)</i></p>';
             settingsList.innerHTML += user;
         } else {
-            let user = '<p id="userSettings"><i><b>' + userList[i].username + '<b></i></p>';
+            let user = '<p id="userSettings"><i>' + userList[i].username + '</i></p>';
             settingsList.innerHTML += user;
         }
     }
 };
 
 var appendUser = function(user) {
-    let username = '<p id="userSettings"><i><b>' + user.username + '<b></i></p>';
+    let username = '<p id="userSettings"><i>' + user.username + '</i></p>';
 
     settingsList.innerHTML += username;
 };
