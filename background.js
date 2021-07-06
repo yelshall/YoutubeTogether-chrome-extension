@@ -111,9 +111,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Connect to server
 var serverConnect = function(videoId, tabId, username) {
-    //socket = io("https://desolate-caverns-55627.herokuapp.com/");
+    socket = io("https://desolate-caverns-55627.herokuapp.com/");
 
-    socket = io("http://192.168.0.182:3000");
+    //socket = io("http://192.168.0.182:3000");
     //Send videoId and wtId to server
     socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username });
 

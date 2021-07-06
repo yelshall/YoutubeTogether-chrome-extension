@@ -3,19 +3,23 @@
 
 <head>
     <link rel="stylesheet" href="./css/watch.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Secular+One' rel='stylesheet'>
 </head>
 
 <body>
     <div id="connected">
-        <p id="link-text">Send this link to your friends to start watching!</p>
-        <input id="share-url" type="text" readonly="true" autocomplete="off" autofocus />
-        <a href="#" id="copy-btn"><img id='copy-unclicked-img' src="../images/copy-button.png"></a>
+        <div id="header">
+            <img src="../images/Asset 1.svg" alt="logo" id="logo-watch-page">
+            <input id="share-url" type="text" readonly="true" autocomplete="off" autofocus />
+            <a href="#" id="copy-btn"><img id='copy-img' src="../images/64copy.png"></a>
 
-        <a href="./index.html"><button id="leave-session" type="button">Quit</button></a>
-        <input id="settings-button" type="image" src="../images/settings-icon.svg">
+            <a href="./index.html"><button id="leave-session" type="button">Quit</button></a>
+
+            <div id="set-button">
+                <input id="settings-button" type="image" src="../images/64gear2.png">
+            </div>
+        </div>
+
 
         <div class="body">
             <div class="chat-container" id="chat"></div>

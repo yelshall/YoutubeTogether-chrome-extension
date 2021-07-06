@@ -1,7 +1,7 @@
 body {
     width: 325px;
-    height: 140px;
-    background-color: #5153c7;
+    height: 165px;
+    background-color: #232323;
     margin: 0;
     padding: 0;
 }
@@ -12,63 +12,95 @@ html {
 }
 
 #disconnected {
+    position: relative;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
-#start-watching-text {
-    font-family: 'Roboto';
-    font-size: 16px;
-    position: relative;
-    top: 10px;
-    color: #ffffff;
-    font-weight: 400;
+#logo-start-watching {
+    position: absolute;
+    height: 37px;
+    width: 141px;
+    margin: 0;
+    padding: 0;
+    top: 50px;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 #start-watching-button {
-    background-color: #4a339b;
+    position: absolute;
+    font-family: 'Secular One';
+    background-color: #ff4e00;
     border: none;
-    color: white;
-    padding: 14px 40px;
+    color: #000000;
+    top: 110px;
+    left: 50%;
+    width: 75%;
+    height: 45px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    border-radius: 2px;
+    font-size: 24px;
+    border-radius: 6px;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 #start-watching-button:hover {
     transition-duration: 0.4s;
-    background-color: #393a5e;
-    color: white;
+    color: rgb(255, 255, 255);
     box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
 #username {
+    position: relative;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 #enter-username-text {
-    font-family: 'Roboto';
-    font-size: 16px;
+    position: absolute;
+    font-family: 'Secular One';
+    font-size: 22px;
     position: relative;
     top: 10px;
-    color: #ffffff;
-    font-weight: 400;
+    color: #ff4e00;
+    margin: 0;
+    padding: 0;
+    top: 54px;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 .enter-username input {
-    width: 60%;
-    border: solid 1px #C7C7C7;
+    position: absolute;
+    width: 75%;
+    height: 30px;
+    border: solid 2px transparent;
     border-radius: 6px;
     font-size: 11px;
     padding: 7px;
     outline: none;
-    font-family: 'Roboto';
-    background-color: #F9F9F9;
+    font-family: 'Secular One';
+    background-color: #313131;
     margin-left: 5%;
     margin-right: 5%;
+    margin: 0;
+    padding: 0;
+    top: 93px;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: white;
 }
 
 .enter-username button {
     display: none;
+    margin: 0;
+    padding: 0;
 }

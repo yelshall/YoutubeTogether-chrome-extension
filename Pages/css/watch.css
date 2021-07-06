@@ -1,7 +1,7 @@
 body {
     width: 325px;
     height: 500px;
-    background-color: #5153c7;
+    background-color: #232323;
     margin: 0;
     padding: 0;
 }
@@ -11,66 +11,93 @@ html {
     padding: 0;
 }
 
-#link-text {
-    text-align: left;
-    margin-left: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 0px;
-    position: relative;
-    top: 5px;
-    font-family: 'Roboto';
-    font-size: 16px;
-    line-height: 13px;
-    color: #ffffff;
-    font-weight: 500;
+#logo-watch-page {
+    position: absolute;
+    height: 35px;
+    width: 122px;
+    top: 13px;
+    left: 21px;
 }
 
 #share-url {
     position: absolute;
-    width: 157px;
-    height: 22px;
-    left: 20px;
-    top: 60px;
-    border: 2px solid #2a2b46;
-    border-color: #2a2b46;
-    border-radius: 6px;
+    width: 255px;
+    height: 23px;
+    left: 16px;
+    top: 64px;
+    border: 0px solid transparent;
+    border-radius: 5px;
     outline: none;
-    background-color: #393a5e;
-    font-family: 'Roboto';
+    background-color: #171717;
+    font-family: 'Secular One';
     font-size: 11px;
-    color: #ffffff;
+    color: #3b3b3b;
+}
+
+#copy-img {
+    height: 15px;
+    width: 15px;
+    margin: auto;
+    top: 50%;
+    -ms-transform: translateY(25%);
+    transform: translateY(25%);
 }
 
 #copy-btn {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    left: 193px;
-    top: 60px;
-    background-color: none;
+    width: 25px;
+    height: 25px;
+    right: 16px;
+    top: 64px;
+    background-color: #171717;
     cursor: pointer;
+    border: 0px solid transparent;
+    border-radius: 5px;
+    text-align: center;
 }
 
 #copy-btn:active {
     opacity: 0;
 }
 
+#settings-button {
+    height: 15px;
+    width: 15px;
+    margin: auto;
+    top: 50%;
+    -ms-transform: translateY(35%);
+    transform: translateY(35%);
+}
+
+#set-button {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 16px;
+    top: 21px;
+    background-color: #171717;
+    cursor: pointer;
+    border: 0px solid transparent;
+    border-radius: 5px;
+    text-align: center;
+}
+
 #leave-session {
     position: absolute;
-    width: 80px;
-    height: 28px;
-    left: 230px;
-    top: 60px;
-    border: 2px solid;
-    border-color: #2a2b46;
-    border-radius: 6px;
+    width: 54px;
+    height: 23px;
+    right: 50px;
+    top: 21px;
+    background-color: #171717;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 5px;
     outline: none;
-    background-color: #5153c7;
-    font-family: 'Roboto Mono';
-    font-size: 14px;
-    font-weight: bold;
-    color: #ffffff;
+    font-family: 'Secular One';
+    font-size: 15.5px;
+    color: #ff4e00;
+    line-height: 23px;
+    box-sizing: border-box;
 }
 
 .body {
@@ -79,7 +106,7 @@ html {
     width: 305px;
     left: 15px;
     overflow: hidden;
-    font-family: 'Roboto';
+    font-family: 'Secular One';
     font-size: 11.5px;
 }
 
@@ -91,19 +118,21 @@ html {
 
 .chat-container #message {
     color: #ffffff;
+    font-family: 'Secular One';
 }
 
 .send-message #message-input {
-    width: 80%;
-    border: solid 1px #C7C7C7;
+    width: 90%;
+    height: 16px;
+    border: solid 0px transparent;
     border-radius: 6px;
     font-size: 11px;
     padding: 7px;
     outline: none;
-    font-family: 'Roboto';
-    background-color: #F9F9F9;
-    margin-left: 5%;
-    margin-right: 5%;
+    font-family: 'Secular One';
+    background-color: #171717;
+    margin: auto;
+    color: white;
 }
 
 .send-message button {
@@ -116,8 +145,12 @@ html {
     width: 305px;
     left: 15px;
     overflow: hidden;
-    font-family: 'Roboto';
+    font-family: 'Secular One';
     font-size: 11.5px;
+}
+
+#userSettings {
+    color: white;
 }
 
 .settings #settings-list-text {
@@ -135,7 +168,7 @@ html {
     border-radius: 6px;
     font-size: 11px;
     outline: none;
-    font-family: 'Roboto';
+    font-family: 'Secular One';
     background-color: #F9F9F9;
 }
 
@@ -145,12 +178,13 @@ html {
 
 .footer {
     position: absolute;
-    background-color: teal;
+    background-color: #3b3b3b;
     width: 100%;
-    height: 70px;
-    top: 446px;
-    font-family: 'Roboto';
+    height: 58px;
+    bottom: 0px;
+    font-family: 'Secular One';
     font-size: 11.5px;
+    text-align: center;
 }
 
 .footer #support-text {
