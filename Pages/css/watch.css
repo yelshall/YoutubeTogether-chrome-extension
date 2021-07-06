@@ -73,7 +73,7 @@ html {
     color: #ffffff;
 }
 
-.container {
+.body {
     position: absolute;
     top: 100px;
     width: 305px;
@@ -120,7 +120,39 @@ html {
     font-size: 11.5px;
 }
 
-#settings-list-text {
+.settings #settings-list-text {
     color: white;
     font-weight: bold;
+}
+
+#settings-options {
+    columns: white;
+    font-size: 16px;
+}
+
+.change #change-username {
+    border: solid 1px #C7C7C7;
+    border-radius: 6px;
+    font-size: 11px;
+    outline: none;
+    font-family: 'Roboto';
+    background-color: #F9F9F9;
+}
+
+.change #change-button {
+    display: none;
+}
+
+.footer {
+    position: absolute;
+    background-color: teal;
+    width: 100%;
+    height: 70px;
+    top: 446px;
+    font-family: 'Roboto';
+    font-size: 11.5px;
+}
+
+.footer #support-text {
+    color: #ffffff;
 }
