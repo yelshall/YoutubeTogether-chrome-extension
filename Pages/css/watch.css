@@ -104,6 +104,7 @@ html {
     position: absolute;
     top: 100px;
     width: 305px;
+    height: 330px;
     left: 15px;
     overflow: hidden;
     font-family: 'Secular One';
@@ -143,13 +144,14 @@ html {
     position: absolute;
     top: 100px;
     width: 305px;
+    height: 330px;
     left: 15px;
     overflow: hidden;
     font-family: 'Secular One';
     font-size: 11.5px;
 }
 
-#userSettings {
+.userSettings {
     color: white;
 }
 
@@ -158,18 +160,34 @@ html {
     font-weight: bold;
 }
 
-#settings-options {
+.settings-options {
+    position: absolute;
+    top: 225px;
+    width: 100%;
+    height: 100px;
     columns: white;
     font-size: 16px;
 }
 
 .change #change-username {
+    position: absolute;
+    top: 20px;
     border: solid 1px #C7C7C7;
     border-radius: 6px;
     font-size: 11px;
     outline: none;
     font-family: 'Secular One';
     background-color: #F9F9F9;
+    width: 120px;
+    height: 16px;
+}
+
+#settings-username-display {
+    font-size: 11.5px;
+    color: white;
+    font-style: italic;
+    margin: 0px;
+    padding: 0px;
 }
 
 .change #change-button {
@@ -189,4 +207,26 @@ html {
 
 .footer #support-text {
     color: #ffffff;
+}
+
+#list-change {
+    position: absolute;
+    top: 50px;
+    font-size: 11.5px;
+    color: white;
+    font-style: italic;
+    margin: 0px;
+    padding: 0px;
+}
+
+#change-master {
+    position: absolute;
+    top: 70px;
+    width: 125px;
+    height: 20px;
+    font-family: 'Secular One';
+    font-size: 11.5px;
+    font-weight: 400;
+    border: solid 1px #C7C7C7;
+    border-radius: 6px;
 }

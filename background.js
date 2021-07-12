@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         } else {
             chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
 
-            sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings });
+            sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings, master: master });
         }
     } else if (request.type == "getMessages") {
         //Get messages
@@ -90,7 +90,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         });
     } else if (request.type == "getData") {
         //Get data
-        sendMessage("data", { url: vidURL, username: username, wtId: wtId, settings: settings });
+        sendMessage("data", { url: vidURL, username: username, wtId: wtId, settings: settings, master: master });
     } else if (request.type == "play" || request.type == "pause") {
         if (connected && master) {
             sendVidData(request.data.timeStamp, request.data.vidState, "playPause");
@@ -105,21 +105,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         settings = request.data.settings;
     } else if (request.type == "changeUsername") {
         changeUsernameServer(request.data.name);
+    } else if (request.type == "changeMaster") {
+        changeMasterServer(request.data.userId);
     }
+
     return true;
 });
 
 //Connect to server
-var serverConnect = function(videoId, tabId, username) {
+var serverConnect = function(videoId, tabId) {
     socket = io("https://desolate-caverns-55627.herokuapp.com/");
 
     //socket = io("http://192.168.0.182:3000");
     //Send videoId and wtId to server
-    socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username });
+    socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username: username });
 
     //Receive inital data
     socket.on("data", (initData) => {
-        console.log(initData);
         username = initData.username;
         vidURL = initData.url;
         wtId = initData.wtId;
@@ -127,14 +129,12 @@ var serverConnect = function(videoId, tabId, username) {
         userId = initData.userId;
         master = initData.master;
 
-
         //Send Initial data to popup script
-        sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings });
+        sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings, master: master });
     });
 
     //Receive messages from other clients
     socket.on("message", (response) => {
-        console.log(response);
         //messages.push(response.message);
         sendMessage("message", { message: response.message });
     });
@@ -162,6 +162,7 @@ var serverConnect = function(videoId, tabId, username) {
     });
 
     socket.on("newName", (response) => {
+
         username = response.name;
         sendMessage("newName", { name: response.name });
     });
@@ -169,6 +170,10 @@ var serverConnect = function(videoId, tabId, username) {
     socket.on("setMaster", (response) => {
         master = true;
         sendMessage("setMaster", {});
+    });
+
+    socket.on("masterControls", (response) => {
+        master = response.master;
     });
 };
 
@@ -191,7 +196,11 @@ var getUserList = function() {
 
 var changeUsernameServer = function(name) {
     socket.emit("changeUsername", { name: name, userId: userId, wtId: wtId });
-}
+};
+
+var changeMasterServer = function(userIdChange) {
+    socket.emit("changeMaster", { userIdChange: userIdChange, userId: userId, wtId: wtId });
+};
 
 //Disconnect from server
 var serverDisconnect = function() {
