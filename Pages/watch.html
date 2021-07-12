@@ -29,10 +29,18 @@
             <p id="settings-list-text">People in this room:</p>
             <div id="settings-list"></div>
             <div class="settings-options">
+                <p id="settings-username-display"></p>
+
                 <form class="change" autocomplete="off">
-                    <input id="change-username" type="text" autocomplete="off" maxlength="20" placeholder="Change username...">
+                    <input id="change-username" type="text" autocomplete="off" maxlength="20" placeholder="Change username">
                     <button id="change-button" type="submit">Send</button>
                 </form>
+
+                <label id="list-change" for="change-master">Change Master User:</label>
+
+                <select name="change-master" id="change-master">
+                    <option value="none" Selected>-</option>
+                </select>
             </div>
         </div>
 

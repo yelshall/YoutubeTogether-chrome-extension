@@ -9,13 +9,17 @@ const quitBtn = document.getElementById('leave-session');
 const settingsBtn = document.getElementById('settings-button');
 const settingsList = document.getElementById('settings-list');
 const supportTxt = document.getElementById('support-text');
-const changeUsername = document.getElementById('change-button')
+const changeUsername = document.getElementById('change-button');
+const usernameDisplay = document.getElementById('settings-username-display');
+const changeMaster = document.getElementById('change-master');
+const labelChange = document.getElementById('list-change');
 
 const bodyContainer = document.getElementsByClassName('body')[0];
 const form = document.getElementsByClassName('send-message')[0];
 const settingsContainer = document.getElementsByClassName("settings")[0];
 
 var username = null;
+var master = false;
 var settings = false;
 
 bodyContainer.style.display = "none";
@@ -70,22 +74,29 @@ var changeLink = function(urlLink) {
 };
 
 var appendUsers = function(userList) {
-    console.log(userList);
     for (let i = 0; i < userList.length; i++) {
         if (userList[i].master) {
-            let user = '<p id="userSettings"><i>' + userList[i].username + ' (Master)</i></p>';
+            let user = '<p class="userSettings"><i>' + userList[i].username + ' (Master)</i></p>';
             settingsList.innerHTML += user;
         } else {
-            let user = '<p id="userSettings"><i>' + userList[i].username + '</i></p>';
+            let user = '<p class="userSettings"><i>' + userList[i].username + '</i></p>';
+            let userChange = '<option value="' + userList[i].userId + '">' + userList[i].username + "</option>";
             settingsList.innerHTML += user;
+            changeMaster.innerHTML += userChange;
         }
     }
 };
 
 var appendUser = function(user) {
     let username = '<p id="userSettings"><i>' + user.username + '</i></p>';
+    let userChange = '<option value="' + userList[i].userId + '">' + userList[i].username + "</option>";
 
     settingsList.innerHTML += username;
+    changeMaster.innerHTML += userChange;
+};
+
+var settingsUsernameDisplay = function() {
+    usernameDisplay.innerHTML += "Username: " + username;
 };
 
 //Add button functionality for messaging
@@ -152,6 +163,19 @@ settingsBtn.addEventListener('click', (event) => {
     }
 });
 
+changeMaster.addEventListener('change', (event) => {
+    event.preventDefault();
+
+    if (changeMaster.value != "none") {
+        let userId = changeMaster.value;
+
+        changeMaster.value = "none";
+
+        console.log(userId);
+        sendMessage("changeMaster", { userId: userId });
+    }
+});
+
 //Initial connection to the server
 sendMessage("connect", {});
 
@@ -170,6 +194,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
     } else if (request.type == "data") {
         username = request.data.username;
+        master = request.data.master;
         changeLink(request.data.url);
 
         if (!request.data.settings) {
@@ -188,15 +213,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             settings = true;
         }
 
+        if (master) {
+            labelChange.style.display = "block";
+            changeMaster.style.display = "block";
+        } else {
+            labelChange.style.display = "none";
+            changeMaster.style.display = "none";
+        }
+
         sendMessage("userList", {});
         sendMessage("getMessages", {});
     } else if (request.type == "userList") {
         appendUsers(request.data.users);
+        settingsUsernameDisplay();
     } else if (request.type == "newUser") {
         appendUser(request.data.user);
     } else if (request.type == "newName") {
-        console.log
         username = request.data.name;
+
+        usernameDisplay.innerHTML = "";
+        settingsUsernameDisplay();
     } else if (request.type == "newUserList") {
         settingsList.innerHTML = "";
 
