@@ -117,7 +117,7 @@ html {
     overflow: auto;
 }
 
-.chat-container #message {
+#message {
     color: #ffffff;
     font-family: 'Secular One';
 }
