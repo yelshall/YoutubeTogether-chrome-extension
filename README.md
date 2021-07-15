@@ -1,1 +1,1 @@
-# extension
+# YoutubeTogether-chrome-extension
