@@ -55,13 +55,13 @@ var sendMessage = function(type, data, callback) {
 //Append Message to chat container
 var addMessage = function(name, type, message) {
     if (type == "createjoinleave") {
-        let chatMessage = '<p id="message"><i>' + name + ' ' + message + '</i></p>';
+        let chatMessage = '<p id="createjoinleave"><i><b>' + name + ' ' + message + '</b></i></p>';
         chatcontainer.innerHTML += chatMessage;
     } else if (type == "message") {
-        let chatMessage = '<p>' + name + ': ' + message + '</p>';
+        let chatMessage = '<p id="message">' + name + ': ' + message + '</p>';
         chatcontainer.innerHTML += chatMessage;
     } else if (type == "changeUsername") {
-        let chatMessage = '<p id="message"><i>' + message + '</i></p>';
+        let chatMessage = '<p id="createjoinleave"><i><b>' + message + '</b></i></p>';
         chatcontainer.innerHTML += chatMessage;
     }
 
