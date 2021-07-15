@@ -172,7 +172,6 @@ var serverConnect = function(videoId, tabId) {
     });
 
     socket.on("masterControls", (response) => {
-        console.log(response);
         master = response.master;
     });
 };

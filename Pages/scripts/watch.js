@@ -171,7 +171,6 @@ changeMaster.addEventListener('change', (event) => {
 
         changeMaster.value = "none";
 
-        console.log(userId);
         sendMessage("changeMaster", { userId: userId });
     }
 });
