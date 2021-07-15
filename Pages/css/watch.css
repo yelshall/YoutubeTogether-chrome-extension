@@ -29,7 +29,7 @@ html {
     border-radius: 5px;
     outline: none;
     background-color: #171717;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
     font-size: 11px;
     color: #3b3b3b;
 }
@@ -112,14 +112,21 @@ html {
 }
 
 .chat-container {
-    height: 350px;
+    height: 330px;
     width: 300px;
     overflow: auto;
+    border: #ffffff;
 }
 
 #message {
     color: #ffffff;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
+}
+
+#createjoinleave {
+    color: #4e4e4e;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
 }
 
 .send-message #message-input {
@@ -130,7 +137,7 @@ html {
     font-size: 11px;
     padding: 7px;
     outline: none;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
     background-color: #171717;
     margin: auto;
     color: white;
@@ -176,7 +183,7 @@ html {
     border-radius: 6px;
     font-size: 11px;
     outline: none;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
     background-color: #F9F9F9;
     width: 120px;
     height: 16px;
@@ -224,9 +231,26 @@ html {
     top: 70px;
     width: 125px;
     height: 20px;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
     font-size: 11.5px;
     font-weight: 400;
     border: solid 1px #C7C7C7;
     border-radius: 6px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #232323;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
