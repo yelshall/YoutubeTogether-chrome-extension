@@ -56,8 +56,9 @@ Email me at youtubetogethersupport@gmail.com
    * Cleanup the client-server communication code.
    * Clean up scripts for the extension's pages.
    * Write better comments in the code.
+   * Get better screenshots.
 * Bugs
-   * Can't think of any bugs as of now. Fixed all major ones before release.
+   * Fix settings button so that it changes color depending on which page it is in.
 
 # Screenshots
 
