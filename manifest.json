@@ -26,15 +26,9 @@
         "declarativeContent",
         "*://*.youtube.com/watch*",
         "webNavigation"
-
     ],
     "content_scripts": [{
-            "matches": ["*://*.youtube.com/watch*"],
-            "js": ["contentScript.js"]
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["checkRefresh.js"]
-        }
-    ]
+        "matches": ["*://*.youtube.com/watch*"],
+        "js": ["contentScript.js"]
+    }]
 }
