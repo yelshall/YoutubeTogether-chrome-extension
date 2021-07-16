@@ -177,6 +177,7 @@ var serverConnect = function(videoId, tabId) {
     });
 
     socket.on("newUserList", (response) => {
+        console.log(response);
         sendMessage("newUserList", { users: response.userList });
     });
 
