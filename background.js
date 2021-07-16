@@ -27,10 +27,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-    if (!inUse) {
+    if (!inUse && details.tabId == currTabId) {
         chrome.tabs.executeScript(null, { file: "contentScript.js" });
     } else {
-        chrome.tabs.executeScript(null, { file: "checkRefresh.js" });
+        chrome.tabs.executeScript(null, { file: "checkRefresh.js" }, () => {
+            chrome.runtime.lastError;
+        });
     }
 });
 
