@@ -6,60 +6,62 @@ YoutubeTogether is a Google Chrome extension that allows you to watch Youtube vi
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+You know the joke about computer scientists where they could just do a task in 5 minutes, but instead end up trying to automate for 2 hours? This is exactly this. 
+
+The extension started from a small problem that me and my friend had when we wanted to watch videos together, none of the extensions worked! So... I built YoutubeTogether! It was made using JavaScript + HTML + CSS for the client-side, and Node.js + Socket.io + Javascript for the server-side. This project was my first exposure to Web Development and this was the first time I ever coded in JavaScript, so the code might look a bit messy.
+
+Moving forward, I hope this extension into something more solid and has better functionality, but I am happy leaving it as is for now. Anyone is free to contribute whatever they want to this project (List of wanted features/bugs to fix below).
 
 ## Getting Started
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Socket.io (Client-side version - already in the files)
+* Socket.io (Server-side version)
+* Express
+* Nodemon (For ease-of-use while developing)
 
-### Installing
+### Installing and running
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+1. Download the files from this repository.
+2. In the background.js file, change line 140 to `socket = io("https://youtubetogetherserver.herokuapp.com/");` if you want to connect to the server locally, or keep as is to connect to the remote server that I hosted (If so, skip instructions 3-5).
+3. Add the entire folder to Chrome (Instructions can be found on the Chrome dev website on how to load Chrome extensions from your device).
+4. Navigate to the server folder and type in: `npm install`.
+5. Start server using `npm run devStart` (Restarts the server if changes are made) or `npm run start` (Regular startup).
+6. Enjoy!
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+Email me at youtubetogethersupport@gmail.com
 
 ## Authors
 
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+* yelshall - Developer
+* omar - Design
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
 
-## License
+## Wanted Features, Bugs, Todo
+* Wanted Features
+   * Want multiple users to control the video instead of having only master control.
+   * Want a better chatting interface, with options of sending gifs and emojis.
+   * Want better integration with Youtube so that you can watch multiple videos in one room, instead of starting a new room for each video.
+   * Want better integration with Youtube playlists.
+* Todo
+   * Better server implementation such that it removes idle users after inactivity.
+   * Better server implementation such that it stores users and rooms externally in a database rather than in an array.
+   * Cleanup the client-server communication code.
+   * Clean up scripts for the extension's pages.
+   * Write better comments in the code.
+* Bugs
+   * Can't think of any bugs as of now. Fixed all major ones before release.
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+# Screenshots
 
-## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
-{"mode":"full","isActive":false}
+![Startwatching screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/StartWatching.PNG)
+![Enterusername screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/EnterUsername.PNG)
+![Mainpage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/MainPage.PNG)
+![Settingspage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/SettingsPage.PNG)
