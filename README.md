@@ -1,7 +1,8 @@
-<div style="text-align:center"><img src="https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/128logo.png" /></div>
+![YoutubeTogether Logo](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/128logo.png)
+
 # YoutubeTogether-chrome-extension
 
-Simple overview of use/purpose.
+YoutubeTogether is a Google Chrome extension that allows you to watch Youtube videos synchronously with your friends! Just click the start watching button, enter a username, and send the link to all your friends! 
 
 ## Description
 
