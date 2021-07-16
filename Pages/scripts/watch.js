@@ -172,6 +172,7 @@ changeMaster.addEventListener('change', (event) => {
         changeMaster.value = "none";
 
         sendMessage("changeMaster", { userId: userId });
+        changeMaster.style.display = "none";
     }
 });
 
@@ -234,6 +235,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         settingsUsernameDisplay();
     } else if (request.type == "newUserList") {
         settingsList.innerHTML = "";
+        changeMaster.innerHTML = "";
+
+        if (master) {
+            labelChange.style.display = "block";
+            changeMaster.style.display = "block";
+        } else {
+            labelChange.style.display = "none";
+            changeMaster.style.display = "none";
+        }
 
         appendUsers(request.data.users);
     }

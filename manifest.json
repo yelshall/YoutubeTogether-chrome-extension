@@ -29,7 +29,12 @@
 
     ],
     "content_scripts": [{
-        "matches": ["*://*.youtube.com/watch*"],
-        "js": ["contentScript.js"]
-    }]
+            "matches": ["*://*.youtube.com/watch*"],
+            "js": ["contentScript.js"]
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["checkRefresh.js"]
+        }
+    ]
 }

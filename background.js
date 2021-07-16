@@ -1,8 +1,4 @@
 //Global Variables
-const messages = [];
-
-var currentVideoState = "noVid";
-var currentTimeStamp = 0;
 var connected = false;
 var settings = false;
 var master = false;
@@ -31,8 +27,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-    if (details.tabId == currTabId) {
+    if (!inUse) {
         chrome.tabs.executeScript(null, { file: "contentScript.js" });
+    } else {
+        chrome.tabs.executeScript(null, { file: "checkRefresh.js" });
     }
 });
 
@@ -53,30 +51,54 @@ chrome.runtime.onInstalled.addListener(function() {
 //Listener from popup or content script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "usernameInput") {
-        username = request.data.username;
-    } else if (request.type == "connect") {
-        //Initial connection to server
-        inUse = true;
-        if (!connected) {
-            chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
-            connected = true;
-            serverConnect(request.videoId, request.id, username);
+        if (!inUse) {
+            username = request.data.username;
+            sendResponse({ connect: true });
         } else {
-            chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
+            sendResponse({ connect: false });
+        }
+    } else if (request.type == "connect") {
+        if (!inUse || request.id == currTabId) {
+            chrome.tabs.executeScript(null, { file: "contentScript.js" });
 
-            sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings, master: master });
+            //Initial connection to server
+            inUse = true;
+            if (!connected) {
+                chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
+                connected = true;
+                serverConnect(request.videoId, request.id, username);
+            } else {
+                chrome.pageAction.setPopup({ popup: "./Pages/watch.html", tabId: request.id });
+
+                sendMessage("data", { username: username, wtId: wtId, url: vidURL, settings: settings, master: master });
+            }
         }
     } else if (request.type == "getMessages") {
         //Get messages
         getMessagesServer();
-    } else if (request.type == "disconnect") {
+    } else if (request.type == "disconnect" || request.type == "refresh") {
         //Disconnect from server
-        chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: request.id });
-        messages.length = 0;
-        connected = false;
-        settings = false;
-        inUse = false;
-        serverDisconnect();
+        let id = null;
+        if (request.id != null) {
+            id = request.id;
+        } else {
+            id = sender.tab.id;
+        }
+
+        if (id == currTabId && inUse) {
+            console.log(request, currTabId);
+            chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: id });
+
+            connected = false;
+            settings = false;
+            inUse = false;
+            master = false;
+            username = null;
+            vidURL = null;
+            currTabId = null;
+
+            serverDisconnect();
+        }
     } else if (request.type == "addMessage") {
         sendMessageServer({
             message: {
@@ -107,6 +129,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         changeUsernameServer(request.data.name);
     } else if (request.type == "changeMaster") {
         changeMasterServer(request.data.userId);
+    } else if (request.type == "contentscript") {
+        console.log("contentscript");
     }
 
     return true;
@@ -114,7 +138,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Connect to server
 var serverConnect = function(videoId, tabId) {
-    socket = io("https://desolate-caverns-55627.herokuapp.com/");
+    //socket = io("https://desolate-caverns-55627.herokuapp.com/");
+    socket = io("http://192.168.0.182:3000");
 
     //Send videoId and wtId to server
     socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username: username });
@@ -134,7 +159,6 @@ var serverConnect = function(videoId, tabId) {
 
     //Receive messages from other clients
     socket.on("message", (response) => {
-        //messages.push(response.message);
         sendMessage("message", { message: response.message });
     });
 
@@ -173,6 +197,8 @@ var serverConnect = function(videoId, tabId) {
 
     socket.on("masterControls", (response) => {
         master = response.master;
+
+        sendMessage('data', { username: username, wtId: wtId, url: vidURL, settings: settings, master: master });
     });
 };
 
@@ -204,10 +230,12 @@ var changeMasterServer = function(userIdChange) {
 //Disconnect from server
 var serverDisconnect = function() {
     try {
+        console.log(wtId, userId, username);
         socket.emit("sendDisconnect", { wtId: wtId, userId: userId });
         socket.disconnect();
         wtId = null;
-        username = null;
+        userId = null;
+        socket = null;
     } catch (err) {
         console.log("Failed to disconnect to server");
     }
