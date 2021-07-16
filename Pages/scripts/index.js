@@ -15,10 +15,16 @@ startWatchingBtn.addEventListener('click', (event) => {
 usernameBtn.addEventListener('click', (event) => {
     event.preventDefault();
     let input = document.getElementById('username-input');
-
-    window.location.href = './watch.html';
-
-    sendMessage('usernameInput', { username: input.value });
+    sendMessage('usernameInput', { username: input.value }, (response) => {
+        if (response.connect) {
+            window.location.href = './watch.html';
+        } else {
+            startDiv.style.display = "block";
+            usernameDiv.style.display = "none";
+            document.getElementById('username-input').value = "";
+            alert("YoutubeTogether is already in use in another tab!")
+        }
+    });
 });
 
 var sendMessage = function(type, data, callback) {

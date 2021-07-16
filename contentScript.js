@@ -49,4 +49,4 @@ var sendMessage = function(type, data, callback) {
     }
 };
 
-console.log("");
+sendMessage("contentscript", {});
