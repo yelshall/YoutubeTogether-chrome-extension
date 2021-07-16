@@ -1,5 +1,4 @@
-![YouTubeTogether Logo](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/128logo.png)
-
+<div style="text-align:center"><img src="https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/128logo.png" /></div>
 # YoutubeTogether-chrome-extension
 
 Simple overview of use/purpose.
