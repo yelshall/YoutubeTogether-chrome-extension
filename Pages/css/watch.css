@@ -96,7 +96,7 @@ html {
     font-family: 'Secular One';
     font-size: 15.5px;
     color: #ff4e00;
-    line-height: 23px;
+    line-height: 20px;
     box-sizing: border-box;
 }
 
@@ -127,6 +127,10 @@ html {
     color: #4e4e4e;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
+}
+
+.send-message {
+    text-align: center;
 }
 
 .send-message #message-input {
@@ -160,11 +164,13 @@ html {
 
 .userSettings {
     color: white;
+    font-family: 'Montserrat';
 }
 
 .settings #settings-list-text {
     color: white;
     font-weight: bold;
+    font-family: 'Montserrat';
 }
 
 .settings-options {
@@ -190,6 +196,7 @@ html {
 }
 
 #settings-username-display {
+    font-family: 'Montserrat';
     font-size: 11.5px;
     color: white;
     font-style: italic;
@@ -207,9 +214,16 @@ html {
     width: 100%;
     height: 58px;
     bottom: 0px;
-    font-family: 'Secular One';
+    font-family: 'Montserrat';
     font-size: 11.5px;
-    text-align: center;
+    text-align: left;
+    font-weight: 800;
+}
+
+#support-email:link {
+    color: #ffffff;
+    font-weight: 300;
+    text-decoration: none;
 }
 
 .footer #support-text {
@@ -219,6 +233,7 @@ html {
 #list-change {
     position: absolute;
     top: 50px;
+    font-family: 'Montserrat';
     font-size: 11.5px;
     color: white;
     font-style: italic;

@@ -20,7 +20,6 @@ ytVideo.addEventListener('timeupdate', () => {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "changeVid") {
         if (request.data.type == "playPause") {
-            console.log("playPause")
             if (request.data.vidState != vidState) {
                 if (request.data.vidState == "play") {
                     ytVideo.play();
@@ -29,7 +28,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 }
             }
         } else {
-            console.log("durationchange");
             if (Math.abs(request.data.timeStamp - ytVideo.currentTime) > 2.0) {
                 ytVideo.currentTime = request.data.timeStamp;
             }
@@ -48,5 +46,3 @@ var sendMessage = function(type, data, callback) {
         chrome.runtime.sendMessage({ type: type, data: data });
     }
 };
-
-sendMessage("contentscript", {});

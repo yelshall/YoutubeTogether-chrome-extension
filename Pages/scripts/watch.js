@@ -91,8 +91,6 @@ var appendUsers = function(userList) {
             let user = '<p class="userSettings"><i>' + userList[i].username + '</i></p>';
             let userChange = '<option value="' + userList[i].userId + '">' + userList[i].username + "</option>";
 
-            console.log(user, userChange);
-
             settingsList.innerHTML += user;
             changeMaster.innerHTML += userChange;
         }
@@ -198,6 +196,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         let message = request.data.message;
         addMessage(message.name, message.type, message.message);
     } else if (request.type == "messages") {
+        chatcontainer.innerHTML = "";
+
         for (let i = 0; i < request.data.messages.length; i++) {
             addMessage(
                 request.data.messages[i].name,

@@ -86,7 +86,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
 
         if (id == currTabId && inUse) {
-            console.log(request, currTabId);
             chrome.pageAction.setPopup({ popup: "./Pages/index.html", tabId: id });
 
             connected = false;
@@ -129,8 +128,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         changeUsernameServer(request.data.name);
     } else if (request.type == "changeMaster") {
         changeMasterServer(request.data.userId);
-    } else if (request.type == "contentscript") {
-        console.log("contentscript");
     }
 
     return true;
@@ -138,8 +135,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Connect to server
 var serverConnect = function(videoId, tabId) {
-    //socket = io("https://desolate-caverns-55627.herokuapp.com/");
-    socket = io("http://192.168.0.182:3000");
+    socket = io("https://youtubetogetherserver.herokuapp.com/");
 
     //Send videoId and wtId to server
     socket.emit("serverConnect", { videoId: videoId, wtId: wtId, username: username });
@@ -177,7 +173,6 @@ var serverConnect = function(videoId, tabId) {
     });
 
     socket.on("newUserList", (response) => {
-        console.log(response);
         sendMessage("newUserList", { users: response.userList });
     });
 
@@ -231,7 +226,6 @@ var changeMasterServer = function(userIdChange) {
 //Disconnect from server
 var serverDisconnect = function() {
     try {
-        console.log(wtId, userId, username);
         socket.emit("sendDisconnect", { wtId: wtId, userId: userId });
         socket.disconnect();
         wtId = null;
