@@ -63,6 +63,9 @@ var addMessage = function(name, type, message) {
     } else if (type == "changeUsername") {
         let chatMessage = '<p id="createjoinleave"><i><b>' + message + '</b></i></p>';
         chatcontainer.innerHTML += chatMessage;
+    } else if (type == "newMaster") {
+        let chatMessage = '<p id="createjoinleave"><i><b>' + message + '</b></i></p>';
+        chatcontainer.innerHTML += chatMessage;
     }
 
     chatcontainer.scrollTop = chatcontainer.scrollHeight;
@@ -74,6 +77,12 @@ var changeLink = function(urlLink) {
 };
 
 var appendUsers = function(userList) {
+    settingsList.innerHTML = "";
+    changeMaster.innerHTML = "";
+    changeMaster.innerHTML += '<option value="none" Selected>-</option>';
+
+
+
     for (let i = 0; i < userList.length; i++) {
         if (userList[i].master) {
             let user = '<p class="userSettings"><i>' + userList[i].username + ' (Master)</i></p>';
@@ -81,6 +90,9 @@ var appendUsers = function(userList) {
         } else {
             let user = '<p class="userSettings"><i>' + userList[i].username + '</i></p>';
             let userChange = '<option value="' + userList[i].userId + '">' + userList[i].username + "</option>";
+
+            console.log(user, userChange);
+
             settingsList.innerHTML += user;
             changeMaster.innerHTML += userChange;
         }
@@ -89,13 +101,14 @@ var appendUsers = function(userList) {
 
 var appendUser = function(user) {
     let username = '<p id="userSettings"><i>' + user.username + '</i></p>';
-    let userChange = '<option value="' + userList[i].userId + '">' + userList[i].username + "</option>";
+    let userChange = '<option value="' + user.userId + '">' + user.username + "</option>";
 
     settingsList.innerHTML += username;
     changeMaster.innerHTML += userChange;
 };
 
 var settingsUsernameDisplay = function() {
+    usernameDisplay.innerHTML = "";
     usernameDisplay.innerHTML += "Username: " + username;
 };
 
@@ -234,9 +247,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         usernameDisplay.innerHTML = "";
         settingsUsernameDisplay();
     } else if (request.type == "newUserList") {
-        settingsList.innerHTML = "";
-        changeMaster.innerHTML = "";
-
         if (master) {
             labelChange.style.display = "block";
             changeMaster.style.display = "block";

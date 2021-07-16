@@ -41,10 +41,10 @@ io.on('connection', (socket) => {
 
         url = "https://www.youtube.com/watch?v=" + response.videoId + "&wt=" + user.wtId;
 
-        socket.emit("data", { username: user.username, wtId: user.wtId, url: url, userId: user.userId, master: master });
+        io.to(user.userId).emit("data", { username: user.username, wtId: user.wtId, url: url, userId: user.userId, master: master });
 
-        socket.broadcast.to(user.wtId).emit("message", { username: user.username, message: { name: user.username, message: ' has joined!', type: "createjoinleave" } });
-        socket.broadcast.to(user.wtId).emit("newUser", { user: user });
+        socket.to(user.wtId).emit("message", { username: user.username, message: { name: user.username, message: ' has joined!', type: "createjoinleave" } });
+        socket.to(user.wtId).emit("newUser", { user: user });
 
         const messageObj = messages.find(msg => msg.wtId == user.wtId);
         if (messageObj != null) {
@@ -69,23 +69,23 @@ io.on('connection', (socket) => {
 
         messageObj.message.push(message.message);
 
-        socket.broadcast.to(user.wtId).emit('message', message);
+        socket.to(user.wtId).emit('message', message);
     });
 
     socket.on('getMessages', (response) => {
         const messageArr = messages.find(msg => msg.wtId == response.wtId);
 
-        socket.emit("messages", messageArr);
+        io.to(response.userId).emit("messages", messageArr);
     });
 
     socket.on('vidData', (response) => {
-        socket.broadcast.to(response.wtId).emit('vidData', response);
+        socket.to(response.wtId).emit('vidData', response);
     });
 
     socket.on('userList', (response) => {
         let list = userLists.find(list => list.wtId == response.wtId);
 
-        socket.emit("userList", { userList: list.users });
+        io.to(response.userId).emit("userList", { userList: list.users });
     });
 
     socket.on('changeUsername', (response) => {
@@ -97,10 +97,10 @@ io.on('connection', (socket) => {
 
         let msg = `${oldName} has changed their username to ${user.username}`;
 
-        socket.emit('newName', { name: user.username });
-        socket.emit("message", { username: user.username, message: { name: user.username, message: msg, type: "changeUsername" } });
+        io.to(response.userId).emit('newName', { name: user.username });
+        io.to(response.userId).emit("message", { username: user.username, message: { name: user.username, message: msg, type: "changeUsername" } });
 
-        socket.broadcast.to(response.wtId).emit("message", { username: user.username, message: { name: user.username, message: msg, type: "changeUsername" } });
+        socket.to(response.wtId).emit("message", { username: user.username, message: { name: user.username, message: msg, type: "changeUsername" } });
 
         const messageObj = messages.find(message => message.wtId == response.wtId);
 
@@ -108,8 +108,8 @@ io.on('connection', (socket) => {
 
         let list = userLists.find(list => list.wtId == response.wtId);
 
-        socket.emit("newUserList", { userList: list.users });
-        socket.broadcast.to(response.wtId).emit("newUserList", { userList: list.users });
+        io.to(response.userId).emit("newUserList", { userList: list.users });
+        socket.to(response.wtId).emit("newUserList", { userList: list.users });
     });
 
     socket.on('changeMaster', (response) => {
@@ -121,19 +121,17 @@ io.on('connection', (socket) => {
 
         let msg = `${newMaster.username} has been set to master`;
 
-        socket.broadcast.to(response.wtId).emit("message", { username: newMaster.username, message: { name: newMaster.username, message: msg, type: "createjoinleave" } });
-        socket.emit("message", { username: newMaster.username, message: { name: newMaster.username, message: msg, type: "createjoinleave" } });
+        io.in(response.wtId).emit("message", { username: newMaster.username, message: { name: newMaster.username, message: msg, type: "newMaster" } });
 
-        socket.broadcast.to(response.userIdChange).emit("masterControls", { master: newMaster.master });
-        socket.emit("masterControls", { master: oldMaster.master });
+        io.to(response.userIdChange).emit("masterControls", { master: newMaster.master });
+        io.to(response.userId).emit("masterControls", { master: oldMaster.master });
 
         const messageObj = messages.find(message => message.wtId == response.wtId);
-        messageObj.message.push({ name: newMaster.username, message: msg, type: "createjoinleave" });
+        messageObj.message.push({ name: newMaster.username, message: msg, type: "newMaster" });
 
         let list = userLists.find(list => list.wtId == response.wtId);
 
-        socket.emit("newUserList", { userList: list.users });
-        socket.broadcast.to(response.wtId).emit("newUserList", { userList: list.users });
+        io.in(response.wtId).emit("newUserList", { userList: list.users });
     });
 
     socket.on('sendDisconnect', (response) => {
@@ -162,14 +160,14 @@ io.on('connection', (socket) => {
             if (user.master) {
                 userObj.users[0].master = true;
 
-                socket.broadcast.to(response.wtId).emit("newUserList", { userList: userObj.users });
+                socket.to(response.wtId).emit("newUserList", { userList: userObj.users });
                 io.to(userObj.users[0].userId).emit("setMaster", {});
 
-                socket.broadcast.to(response.wtId).emit('message', { wtId: response.wtId, message: { name: userObj.users[0].username, message: ' has been set to master', type: "createjoinleave" } });
+                socket.to(response.wtId).emit('message', { wtId: response.wtId, message: { name: userObj.users[0].username, message: ' has been set to master', type: "createjoinleave" } });
             }
         }
 
-        socket.broadcast.to(response.wtId).emit('message', { wtId: response.wtId, message: { name: user.username, message: ' has left!', type: "createjoinleave" } });
+        socket.to(response.wtId).emit('message', { wtId: response.wtId, message: { name: user.username, message: ' has left!', type: "createjoinleave" } });
         console.log(`user left ${user.username}`);
 
         users = users.filter(user => user.userId != response.userId);
