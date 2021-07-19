@@ -62,7 +62,7 @@ Email me at youtubetogethersupport@gmail.com
 
 # Screenshots
 
-![Startwatching screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/StartWatching.PNG)
-![Enterusername screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/EnterUsername.PNG)
-![Mainpage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/MainPage.PNG)
-![Settingspage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/SettingsPage.PNG)
+![Startwatching screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/start-watching-screenshot.PNG)
+![Enterusername screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/enter-username-screenshot.PNG)
+![Mainpage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/main-page-screenshot.PNG)
+![Settingspage screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/settings-page-screenshot.PNG)
