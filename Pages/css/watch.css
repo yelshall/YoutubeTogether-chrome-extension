@@ -227,7 +227,10 @@ html {
 }
 
 .footer #support-text {
+    position: absolute;
     color: #ffffff;
+    top: 0px;
+    left: 15px;
 }
 
 #list-change {

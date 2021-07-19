@@ -14,6 +14,8 @@ const usernameDisplay = document.getElementById('settings-username-display');
 const changeMaster = document.getElementById('change-master');
 const labelChange = document.getElementById('list-change');
 
+const settingsButtonDiv = document.getElementById('set-button');
+
 const bodyContainer = document.getElementsByClassName('body')[0];
 const form = document.getElementsByClassName('send-message')[0];
 const settingsContainer = document.getElementsByClassName("settings")[0];
@@ -161,6 +163,9 @@ settingsBtn.addEventListener('click', (event) => {
         settingsContainer.style.display = "block";
         supportTxt.style.display = "block";
 
+        settingsButtonDiv.style.backgroundColor = '#ff4e00';
+        settingsBtn.src = '../images/64gear1.png';
+
         settings = true;
         sendMessage("settings", { settings: settings });
     } else {
@@ -168,6 +173,10 @@ settingsBtn.addEventListener('click', (event) => {
         form.style.display = "block";
         settingsContainer.style.display = "none";
         supportTxt.style.display = "none";
+
+
+        settingsButtonDiv.style.backgroundColor = '#171717';
+        settingsBtn.src = '../images/64gear2.png';
 
         settings = false;
         sendMessage("settings", { settings: settings });
@@ -216,12 +225,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             settingsContainer.style.display = "none";
             supportTxt.style.display = "none";
 
+            settingsButtonDiv.style.backgroundColor = '#171717';
+            settingsBtn.src = '../images/64gear2.png';
+
             settings = false;
         } else {
             bodyContainer.style.display = "none";
             form.style.display = "none";
             settingsContainer.style.display = "block";
             supportTxt.style.display = "block";
+
+            settingsButtonDiv.style.backgroundColor = '#ff4e00';
+            settingsBtn.src = '../images/64gear1.png';
 
             settings = true;
         }
