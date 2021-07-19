@@ -21,7 +21,15 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
     chrome.tabs.onRemoved.addListener(function(tabId, changeInfo, tab) {
         if (tabId == currTabId) {
-            wtId = null;
+            connected = false;
+            settings = false;
+            inUse = false;
+            master = false;
+            username = null;
+            vidURL = null;
+            currTabId = null;
+
+            serverDisconnect();
         }
     });
 });
