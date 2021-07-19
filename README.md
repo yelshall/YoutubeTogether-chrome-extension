@@ -58,8 +58,7 @@ Email me at youtubetogethersupport@gmail.com
    * Write better comments in the code.
    * Get better screenshots.
 * Bugs
-   * Fix settings button so that it changes color depending on which page it is in.
-
+   * There bugs that I probably didn't catch. Feel free to report them.
 # Screenshots
 
 ![Startwatching screenshot](https://github.com/yelshall/YoutubeTogether-chrome-extension/blob/main/images/start-watching-screenshot.PNG)
